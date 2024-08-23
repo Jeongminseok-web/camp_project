@@ -1,21 +1,20 @@
 -- 테이블 생성
-CREATE TABLE task (
+CREATE TABLE spot (
     _id TEXT PRIMARY KEY,
-    isCompleted BOOLEAN NOT NULL DEFAULT false,
-    isImportant BOOLEAN NOT NULL DEFAULT false,
+    isVisited BOOLEAN NOT NULL DEFAULT false,
     userId TEXT NOT NULL
 );
 
 -- 데이터 추가
-INSERT INTO task (_id, isCompleted, isImportant, userId)
-VALUES ('1234', false, false, 'minseok')
+INSERT INTO spot (_id, isVisited, userId)
+VALUES ('1234', false, 'minseok')
 
 
 -- 데이터 조회
-SELECT * FROM task WHERE iserId = 'minseok' ORDER BY created_at DESC(ASC);
+SELECT * FROM spot WHERE iserId = 'minseok' ORDER BY created_at DESC(ASC);
 
 -- 특정 사용자 데이터 필터 조회
-SELECT * FROM task WHERE userId = 'minjeong'
+SELECT * FROM spot WHERE userId = 'minjeong'
 
 -- 데이터 삭제
 DELETE FROM task WHERE _id = '1234';

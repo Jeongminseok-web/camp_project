@@ -26,3 +26,18 @@ export const navMenus = [
     idx: 4,
   },
 ];
+
+export const themenavbar = [
+  { label: "일출명소", idx: 0 },
+  { label: "일몰명소", idx: 1 },
+  { label: "수상레저", idx: 2 },
+  { label: "항공레저", idx: 3 },
+  { label: "스키", idx: 4 },
+  { label: "낚시", idx: 5 },
+  { label: "엑티비티", idx: 6 },
+  { label: "불꽃여행", idx: 7 },
+  { label: "여름물놀이", idx: 8 },
+  { label: "가을단풍명소", idx: 9 },
+  { label: "겨울눈꽃명소", idx: 10 },
+  { label: "걷기길", idx: 11 },
+];

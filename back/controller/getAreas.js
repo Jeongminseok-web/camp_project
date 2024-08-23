@@ -1,11 +1,11 @@
 const database = require("../database/database");
 
-exports.getTasks = async (req, res) => {
+exports.getAreas = async (req, res) => {
   const userId = req.params.userId;
 
   try {
     const result = await database.query(
-      "SELECT * FROM task WHERE userId = $1 ORDER BY created_at DESC",
+      "SELECT * FROM spot WHERE userId = $1 ORDER BY created_at DESC",
       [userId]
     );
     return res.status(200).json(result.rows);

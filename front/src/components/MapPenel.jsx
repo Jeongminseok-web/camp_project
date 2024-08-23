@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useRef } from "react";
-import { data } from "../database/data";
+// import { data } from "../database/data";
 
 const MapPenel = () => {
   const mapRef = useRef(null);
@@ -18,7 +18,7 @@ const MapPenel = () => {
 
   // const campsData = fetch(data);
 
-  console.log(data);
+  // console.log(data);
   // const campsData = data({});
 
   // const markerRef = useRef([]);
