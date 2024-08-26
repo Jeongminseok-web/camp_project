@@ -12,7 +12,7 @@ const LocalNav = () => {
   };
 
   return (
-    <div className="pl-2 ">
+    <div className="">
       <div
         className="flex text-md text-center gap-3 
       border border-neutral-700 px-2 py-3 overflow-auto"
@@ -26,7 +26,7 @@ const LocalNav = () => {
               id={`dropdown-${regionCode}`}
               value={selectedDistricts[regionCode] || ""}
               onChange={(e) => handleDistrictChange(regionCode, e)}
-              className="text-center w-"
+              className="text-center w-25"
             >
               <option value="">{`${regionData[regionCode].name}`}</option>
               {regionData[regionCode].districts.map((district) => (

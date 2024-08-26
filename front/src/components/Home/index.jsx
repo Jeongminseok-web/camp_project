@@ -1,19 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../Navbar";
-import MapPenel from "../MapPenel";
-import { GiSouthKorea } from "react-icons/gi";
+import Map from "../Map";
+import ModalItem from "../items/ModalItem";
+import { useDispatch, useSelector } from "react-redux";
+import { closeModalItem } from "../../redux/slices/ModalItemSlice";
+import KakaoMap from "../KakaoMap";
 
-const index = () => {
+const Index = ({ onRegionClick }) => {
+  const [isModalItemOpen, setIsModalItemOpen] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+
+  const handleRegionClick = (regionName) => {
+    setSelectedRegion(regionName);
+    setIsModalItemOpen(true);
+  };
+
+  const handleCloseModalItem = () => {
+    setIsModalItemOpen(false);
+    setSelectedRegion(null);
+  };
+
   return (
     <div className="page-section">
       <Navbar />
-      <div className="flex justify-center items-center w-full h-full">
-        <GiSouthKorea className="w-[40%] h-[40%]" />
+      <div className="w-[80%] h-full flex flex-col justify-center items-center">
+        <h2 className="text-3xl mb-5">원하시는 지역을 선택해 주세요</h2>
+        {/* <Map /> */}
+        <KakaoMap onRegionClick={handleRegionClick} />
       </div>
-
-      {/* <MapPenel /> */}
+      {isModalItemOpen && (
+        <ModalItem onClose={handleCloseModalItem} region={selectedRegion} />
+      )}
+      {/* <ModalItem /> */}
     </div>
   );
 };
 
-export default index;
+export default Index;
