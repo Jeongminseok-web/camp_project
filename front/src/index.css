@@ -18,3 +18,17 @@ body {
   margin: auto;
   display: flex;
 }
+
+.test::-webkit-scrollbar {
+  height: 5px;
+}
+
+.test::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.test::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}

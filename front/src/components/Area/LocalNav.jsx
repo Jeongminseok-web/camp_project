@@ -22,15 +22,9 @@ const LocalNav = ({ onRegionChange }) => {
 
   return (
     <div className="">
-      <div
-        className="flex text-md text-center gap-3 
-      border border-neutral-700 rounded-md px-2 py-3 overflow-auto"
-      >
+      <div className="test flex text-md text-center gap-3 px-2 py-3 overflow-x-auto">
         {Object.keys(regionData).map((regionCode) => (
-          <div
-            key={regionCode}
-            className="border border-neutral-700 rounded-sm"
-          >
+          <div key={regionCode}>
             <select
               id={`dropdown-${regionCode}`}
               value={selectedDistricts[regionCode] || ''}
@@ -47,20 +41,6 @@ const LocalNav = ({ onRegionChange }) => {
                 </option>
               ))}
             </select>
-
-            {/* {selectedDistricts[regionCode] && (
-              <div>
-                <p>
-                  {
-                    regionData[regionCode].districts.find(
-                      (district) =>
-                        district.시군구_코드_법정동기준.toString() ===
-                        selectedDistricts[regionCode]
-                    ).시군구명
-                  }
-                </p>
-              </div>
-            )} */}
           </div>
         ))}
       </div>
