@@ -5,7 +5,7 @@ exports.getAreas = async (req, res) => {
 
   try {
     const result = await database.query(
-      "SELECT * FROM spot WHERE userId = $1 ORDER BY created_at DESC",
+      "SELECT * FROM areas WHERE userId = $1 ORDER BY created_at DESC",
       [userId]
     );
     return res.status(200).json(result.rows);

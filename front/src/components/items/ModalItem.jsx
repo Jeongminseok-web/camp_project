@@ -1,12 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { IoIosArrowDropleft } from "react-icons/io";
 import { IoIosArrowDropright } from "react-icons/io";
+import { FaRegHeart } from "react-icons/fa6";
+import { FaHeart } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import {
+  fetchDeleteItemData,
+  fetchGetItemsData,
+  fetchUpdateAddData,
+} from "../../redux/slices/apiSlice";
 
-const ModalItem = ({ selectedRegion, onClose }) => {
+const ModalItem = ({ selectedRegion, onClose, areas }) => {
   const [data, setData] = useState([]);
   // const [selectedRegion, setSelectedRegion] = useState("강원");
   const [selectedCampings, setSelectedCampings] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const dispatch = useDispatch();
+  const [isAdd, setIsAdd] = useState(areas?.isAdd || false);
+
+  const { _id, title, isadd, userid } = areas || {};
+
+  // areas 객체가 업데이트 될 때 isAdd 상태 업데이트
+  useEffect(() => {
+    if (areas) {
+      setIsAdd(areas.isAdd || false);
+    }
+  }, [areas]);
 
   // 데이터 가져오는 함수
   const fetchData = () => {
@@ -16,7 +36,7 @@ const ModalItem = ({ selectedRegion, onClose }) => {
       .then((response) => response.json())
       .then((data) => {
         setData(data.response.body.items.item);
-        console.log("Full API response:", data);
+        // console.log("Full API response:", data);
         // console.log("Fetched Data", data.response.body.items.item);
       }) // 데이터를 가져와서 상태 업데이트
       .catch((error) => console.error("Error fetching data:", error));
@@ -76,6 +96,47 @@ const ModalItem = ({ selectedRegion, onClose }) => {
 
   const currentCamping = selectedCampings[currentIndex];
 
+  // 하트 클릭 시 호출되는 함수
+
+  const changeAdd = async () => {
+    const newIsAdd = !isAdd;
+    setIsAdd(newIsAdd);
+
+    const updateAddData = {
+      itemid: areas._id,
+      isadd: newIsAdd,
+    };
+
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateAddData),
+    };
+    await dispatch(fetchUpdateAddData(options)).unwrap();
+    newIsAdd
+      ? toast.success("캠핑장을 추가하였습니다.")
+      : toast.success("캠핑장 추가를 실패했습니다.");
+  };
+
+  const deleteItem = async () => {
+    const confirm = window.confirm("캠핑장을 삭제하시겠습니까 ?");
+
+    if (!confirm) return;
+
+    try {
+      await dispatch(fetchDeleteItemData(areas._id)).unwrap();
+      toast.success("캠핑장이 삭제되었습니다.");
+      await dispatch(fetchGetItemsData(areas.userid)).unwrap();
+    } catch (error) {
+      toast.error("캠핑장 삭제에 실패했습니다.");
+      console.error(error);
+    }
+  };
+  console.log("Areas:", areas);
+  console.log("Areas in Parent:", areas);
+
   return (
     <div
       // onClick={onClose}
@@ -85,7 +146,7 @@ const ModalItem = ({ selectedRegion, onClose }) => {
         <button onClick={handlePrevious}>
           <IoIosArrowDropleft className="text-6xl text-white" />
         </button>
-        <div className="border border-neutral-600 bg-slate-300 w-1/2 h-[70vh] overflow-auto p-2">
+        <div className="border border-neutral-600 bg-slate-300 w-1/2 h-[70vh] overflow-auto p-2 relative">
           <div>
             {currentCamping ? (
               <div className="p-2">
@@ -134,6 +195,13 @@ const ModalItem = ({ selectedRegion, onClose }) => {
               <p>캠핑장 로딩중입니다.</p>
             )}
           </div>
+
+          <button
+            className="absolute bottom-5 right-5 text-xl"
+            onClick={changeAdd}
+          >
+            {isAdd ? <FaHeart /> : <FaRegHeart onClick={deleteItem} />}
+          </button>
         </div>
         <button onClick={handleNext}>
           <IoIosArrowDropright className="text-6xl text-white" />
