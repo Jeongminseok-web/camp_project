@@ -1,21 +1,30 @@
-import React, { useState } from "react";
-import { regionData } from "../../utils/localData";
+import React, { useState } from 'react';
+import { regionData } from '../../utils/localData';
 
-const LocalNav = () => {
+const LocalNav = ({ onRegionChange }) => {
   const [selectedDistricts, setSelectedDistricts] = useState({});
 
   const handleDistrictChange = (regionCode, e) => {
+    const selectedDistrict = regionData[regionCode].districts.find(
+      (district) =>
+        district.시군구_코드_법정동기준.toString() === e.target.value
+    );
+
     setSelectedDistricts({
       ...selectedDistricts,
       [regionCode]: e.target.value,
     });
+
+    if (selectedDistrict) {
+      onRegionChange(selectedDistrict.lat, selectedDistrict.lng);
+    }
   };
 
   return (
     <div className="">
       <div
         className="flex text-md text-center gap-3 
-      border border-neutral-700 px-2 py-3 overflow-auto"
+      border border-neutral-700 rounded-md px-2 py-3 overflow-auto"
       >
         {Object.keys(regionData).map((regionCode) => (
           <div
@@ -24,7 +33,7 @@ const LocalNav = () => {
           >
             <select
               id={`dropdown-${regionCode}`}
-              value={selectedDistricts[regionCode] || ""}
+              value={selectedDistricts[regionCode] || ''}
               onChange={(e) => handleDistrictChange(regionCode, e)}
               className="text-center w-25"
             >

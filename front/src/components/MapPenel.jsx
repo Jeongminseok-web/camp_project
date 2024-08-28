@@ -1,20 +1,25 @@
-import React, { useCallback, useEffect } from "react";
-import { useRef } from "react";
+import React, { useCallback, useEffect, useRef } from 'react';
 // import { data } from "../database/data";
 
-const MapPenel = () => {
+const MapPenel = ({ center, zoom }) => {
   const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
 
   const initMap = useCallback(() => {
-    new window.google.maps.Map(mapRef.current, {
-      center: { lat: 37.480751517671074, lng: 126.8805175744923 },
-      zoom: 10,
+    mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
+      center,
+      zoom,
     });
-  }, [mapRef]);
+  }, [center, zoom]);
 
   useEffect(() => {
-    initMap();
-  }, [initMap]);
+    if (!mapInstanceRef.current) {
+      initMap();
+    } else {
+      mapInstanceRef.current.setCenter(center);
+      mapInstanceRef.current.setZoom(zoom);
+    }
+  }, [center, zoom, initMap]);
 
   // const campsData = fetch(data);
 

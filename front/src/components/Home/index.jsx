@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../Navbar";
-import ModalItem from "../items/ModalItem";
-import { useDispatch, useSelector } from "react-redux";
-import { closeModalItem } from "../../redux/slices/ModalItemSlice";
-import KakaoMap from "../KakaoMap";
+import React, { useEffect, useState } from 'react';
+import Navbar from '../Navbar';
+import ModalItem from '../items/ModalItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeModalItem } from '../../redux/slices/ModalItemSlice';
+import KakaoMap from '../KakaoMap';
 
 const Index = () => {
   // const [data, setData] = useState(null);
@@ -26,7 +26,7 @@ const Index = () => {
   const [selectedRegion, setSelectedRegion] = useState(null);
 
   const handleRegionClick = (regionName) => {
-    console.log("Region name in handleRegionClick:", regionName);
+    console.log('Region name in handleRegionClick:', regionName);
     setSelectedRegion(regionName);
     setIsModalItemOpen(true);
   };
