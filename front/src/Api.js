@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function Users() {
   // 상태 초기화
-  const [data, setData] = useState(null);
+  const [data, setData] = useState();
 
   // 컴포넌트가 마운트될 때 실행되는 부분
   useEffect(() => {

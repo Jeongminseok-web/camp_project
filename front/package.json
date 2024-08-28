@@ -49,5 +49,6 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.4.10"
-  }
+  },
+  "proxy": "https://apis.data.go.kr/"
 }

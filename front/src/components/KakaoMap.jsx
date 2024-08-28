@@ -25,40 +25,83 @@ let globalColor = [
   "#ADBDFF",
 ];
 
+// const simplifyRegionName = (name) => {
+//   if (name.includes("도")) return name.replace("도", "");
+//   if (name.includes("특별시")) return name.replace("특별시", "");
+//   if (name.includes("광역시")) return name.replace("광역시", "");
+//   return name; // 기본적으로 원래 이름을 반환
+// };
+// const simplifyRegionName = (name) => {
+//   // name이 문자열인지 확인
+//   if (typeof name !== "string") return "";
+
+//   if (name.includes("도")) return name.replace("도", "");
+//   if (name.includes("특별시")) return name.replace("특별시", "");
+//   if (name.includes("광역시")) return name.replace("광역시", "");
+//   return name; // 기본적으로 원래 이름을 반환
+// };
+
 const KakaoMap = ({ onRegionClick }) => {
   const [geoList, setGeoList] = useState([]);
 
   useEffect(() => {
     const { features } = dataJson;
 
-    const data = [];
-
-    for (let item of features) {
+    const data = features.map((item, index) => {
       const { geometry, properties } = item;
-      const { CTP_KOR_NM } = properties;
+      const { SIG_KOR_NM } = properties; // Use SIG_KOR_NM
       const { coordinates } = geometry;
 
-      const pathList = [];
-      for (let areaList of coordinates) {
-        const path = [];
-        for (let area of areaList) {
-          path.push({
-            lng: area[0],
-            lat: area[1],
-          });
-        }
-        pathList.push(path);
-      }
+      const pathList = coordinates.map((areaList) =>
+        areaList.map((area) => ({
+          lng: area[0],
+          lat: area[1],
+        }))
+      );
 
-      data.push({
-        name: CTP_KOR_NM,
+      return {
+        name: SIG_KOR_NM || `Unknown-${index}`, // Default value if SIG_KOR_NM is missing
         path: pathList,
         isHover: false,
-        key: Math.random(),
-      });
-    }
+        key: `${SIG_KOR_NM || `Unknown-${index}`}-${index}`,
+      };
+    });
+
+    // console.log("GeoList:", data); // Debug output
     setGeoList(data);
   }, []);
+  //   const { features } = dataJson;
+
+  //   const data = [];
+
+  //   for (let index = 0; index < features.length; index++) {
+  //     const item = features[index];
+  //     const { geometry, properties } = item;
+  //     const { CTP_KOR_NM } = properties;
+  //     const { coordinates } = geometry;
+
+  //     const pathList = [];
+  //     for (let areaList of coordinates) {
+  //       const path = [];
+  //       for (let area of areaList) {
+  //         path.push({
+  //           lng: area[0],
+  //           lat: area[1],
+  //         });
+  //       }
+  //       pathList.push(path);
+  //     }
+
+  //     data.push({
+  //       name: CTP_KOR_NM,
+  //       path: pathList,
+  //       isHover: false,
+  //       key: `${CTP_KOR_NM}-${index}`,
+  //     });
+  //   }
+  //   console.log("GeoList:", data);
+  //   setGeoList(data);
+  // }, []);
 
   return (
     <div className="w-[500px] h-[500px] rounded-full">
@@ -71,9 +114,10 @@ const KakaoMap = ({ onRegionClick }) => {
         className="w-full h-full rounded-full"
         level={13} // 지도의 확대 레벨
       >
-        {geoList.map((item, index) => {
-          const { key, path, isHover } = item;
-          const color = globalColor[index];
+        {geoList.map((item) => {
+          const { key, path, isHover, name } = item;
+          const color =
+            globalColor[geoList.findIndex((geo) => geo.key === key)];
           return (
             <Polygon
               key={key}
@@ -112,7 +156,10 @@ const KakaoMap = ({ onRegionClick }) => {
                   })
                 );
               }}
-              onClick={() => onRegionClick(item.name)}
+              onClick={() => {
+                // console.log("Polygon name on click:", name); // Debug output
+                onRegionClick(name);
+              }}
             />
           );
         })}
