@@ -13,11 +13,18 @@ const Index = () => {
   return (
     <div className="w-[100%] h-[98vh] m-auto flex">
       <Navbar />
-      <div className="w-[100%] h-[20vh]">
-        <ThemeNav onSelectTheme={handleThemeSelect} />
-      </div>
-      <div className="mt-4">
-        {selectedTheme && <ThemePanel selectedTheme={selectedTheme} />}
+
+      {/* Right Content Area */}
+      <div className="w-[80%] flex flex-col">
+        {/* ThemeNav on top */}
+        <div className="w-full h-[20vh]">
+          <ThemeNav onSelectTheme={handleThemeSelect} />
+        </div>
+
+        {/* ThemePanel below ThemeNav */}
+        <div className="w-full">
+          {selectedTheme && <ThemePanel selectedTheme={selectedTheme} />}
+        </div>
       </div>
     </div>
   );

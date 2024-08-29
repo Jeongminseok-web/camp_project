@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 import { FaCrown } from 'react-icons/fa6';
+import { CiSquarePlus } from 'react-icons/ci';
+import Modal from '../items/Modal';
 
 const HotPanel = () => {
   const [hotData, setHotData] = useState([]);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false); // 모달 창 상태
+  const [modalContent, setModalContent] = useState(null); // 모달에 표시할 내용
 
   // contentId 순서대로 정렬하고자 하는 contentId 목록
   const contentIdOrder = [
@@ -53,28 +57,90 @@ const HotPanel = () => {
     fetchHotData();
   }, []);
 
+  const openModal = (item) => {
+    setModalContent(item);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setModalContent(null);
+  };
+
   return (
-    <div className="hot-panel mt-2 ml-4">
+    <div className="hot-panel mt-2 ml-4 mr-4">
       <FaCrown />
       {error ? (
         <p>{error}</p>
       ) : hotData.length > 0 ? (
-        <div className="grid grid-rows-7 grid-cols-3 gap-4">
+        <div className="w-full grid grid-cols-3 gap-2">
           {hotData.map((item, index) => (
             <div
               key={item.contentId}
               className="border border-gray-300 rounded-md p-4"
             >
-              <h3 className="text-lg font-bold">
+              <h3 className="text-lg font-bold flex justify-between">
                 {index + 1}위: {item.facltNm}
+                <button onClick={() => openModal(item)} className="ml-4">
+                  <CiSquarePlus />
+                </button>
               </h3>
-              <p>{item.addr1}</p>
-              <p>{item.tel}</p>
+              <div className="flex items-center">
+                <img
+                  src={item.firstImageUrl}
+                  className="w-[20%] h[10%] mt-5"
+                ></img>
+                <div className="ml-5">
+                  <p>주소: {item.addr1}</p>
+                  <p>전화번호: {item.tel}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       ) : (
         <p>로딩중...</p>
+      )}
+
+      {modalContent && (
+        <Modal
+          showModal={showModal}
+          closeModal={closeModal}
+          title={modalContent.facltNm}
+        >
+          <p className="mb-5">주소: {modalContent.addr1}</p>
+
+          <p className="mb-5">
+            전화번호: {modalContent.tel ? modalContent.tel : '정보 없음'}
+          </p>
+
+          <p className="mb-5">
+            부대 시설: {modalContent.sbrsCl ? modalContent.sbrsCl : '정보 없음'}
+          </p>
+          <p className="mb-5">
+            주변 시설:{' '}
+            {modalContent.posblFcltyCl
+              ? modalContent.posblFcltyCl
+              : '정보 없음'}
+          </p>
+          <p>{modalContent.intro}</p>
+
+          <p className="mt-10">
+            홈페이지:{' '}
+            {modalContent.resveUrl ? (
+              <a
+                href={modalContent.resveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline break-all"
+              >
+                {modalContent.resveUrl}
+              </a>
+            ) : (
+              '정보 없음'
+            )}
+          </p>
+        </Modal>
       )}
     </div>
   );

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import Modal from '../items/Modal';
+import { CiSquarePlus } from 'react-icons/ci';
 
 const ThemePanel = ({ selectedTheme }) => {
   const [themeData, setThemeData] = useState([]);
+  const [showModal, setShowModal] = useState(false); // 모달 창 상태
+  const [modalContent, setModalContent] = useState(null); // 모달에 표시할 내용
 
   useEffect(() => {
     const fetchThemeData = async () => {
@@ -19,7 +23,9 @@ const ThemePanel = ({ selectedTheme }) => {
 
           // themaEnvrnCl 값과 selectedTheme.label이 일치하는 데이터 필터링
           const filteredData = items.filter(
-            (item) => item.themaEnvrnCl === selectedTheme.label
+            (item) =>
+              item.themaEnvrnCl &&
+              item.themaEnvrnCl.includes(selectedTheme.label)
           );
 
           setThemeData(filteredData);
@@ -36,22 +42,74 @@ const ThemePanel = ({ selectedTheme }) => {
     }
   }, [selectedTheme]);
 
+  const openModal = (item) => {
+    setModalContent(item);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setModalContent(null);
+  };
+
   return (
-    <div className="theme-panel mt-4">
+    <div className="theme-panel m-2">
       {themeData.length > 0 ? (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2">
           {themeData.map((item, index) => (
             <div key={index} className="border border-gray-300 rounded-md p-4">
-              <h3 className="text-lg font-bold">{item.facltNm}</h3>
-              <img src={item.firstImageUrl} className="w-full h-auto" />
-              <p>{item.addr1}</p>
-              <p>{item.tel}</p>
+              <h3 className="text-lg font-bold mb-2 flex justify-between">
+                {item.facltNm}
+                <button onClick={() => openModal(item)} className="ml-4">
+                  <CiSquarePlus />
+                </button>
+              </h3>
+              <img src={item.firstImageUrl} className="w-full h-auto mb-2" />
+              <p className="mb-2">주소: {item.addr1}</p>
+              <p className="mb-2">
+                전화번호: {item.tel ? item.tel : '정보 없음'}
+              </p>
+              <p>#{item.themaEnvrnCl}</p>
               {/* <p>{item.intro}</p> */}
             </div>
           ))}
         </div>
       ) : (
         <p>로딩중..</p>
+      )}
+
+      {modalContent && (
+        <Modal
+          showModal={showModal}
+          closeModal={closeModal}
+          title={modalContent.facltNm}
+        >
+          <p className="mb-5">주소: {modalContent.addr1}</p>
+
+          <p className="mb-5">
+            전화번호: {modalContent.tel ? modalContent.tel : '정보 없음'}
+          </p>
+
+          <p className="mb-5">부대 시설: {modalContent.sbrsCl}</p>
+          <p className="mb-5">주변 시설: {modalContent.posblFcltyCl}</p>
+          <p>{modalContent.intro}</p>
+
+          <p className="mt-10">
+            홈페이지:{' '}
+            {modalContent.resveUrl ? (
+              <a
+                href={modalContent.resveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline break-all"
+              >
+                {modalContent.resveUrl}
+              </a>
+            ) : (
+              '정보 없음'
+            )}
+          </p>
+        </Modal>
       )}
     </div>
   );

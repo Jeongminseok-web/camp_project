@@ -33,10 +33,8 @@ const Index = () => {
           <LocalNav onRegionChange={handleRegionChange} />
         </div>
         <div className="w-full h-full flex">
-          <div className="h-full w-[40%]">
-            <MapPenel center={center} zoom={zoom} />
-          </div>
-          <div className="w-[50%] p-4">
+          <MapPenel center={center} zoom={zoom} />
+          <div className="w-full">
             <LocalPanel selectedRegion={selectedRegion} />
           </div>
         </div>

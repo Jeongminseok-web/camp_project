@@ -6,7 +6,7 @@ const Index = () => {
   return (
     <div className="w-[100%] h-[98vh] m-auto flex">
       <Navbar />
-      <div>
+      <div className="w-full">
         <HotPanel />
       </div>
     </div>
