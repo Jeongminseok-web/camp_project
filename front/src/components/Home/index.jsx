@@ -39,7 +39,7 @@ const Index = () => {
   };
 
   return (
-    <div className="page-section">
+    <div className="w-[100%] h-[98vh] m-auto flex">
       <Navbar />
       <div className="w-[80%] h-full flex flex-col justify-center items-center">
         <h2 className="text-3xl mb-5">원하시는 지역을 선택해 주세요</h2>

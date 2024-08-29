@@ -48,18 +48,16 @@ const Navbar = ({ menuIdx }) => {
   };
 
   return (
-    <nav
-      className="w-[20%] h-full flex flex-col justify-between
-     items-center border border-gray-300 rounded-md py-5 px-2
-     overflow-hidden mt-2 ml-2"
-    >
+    <nav className="w-[20%] h-full flex flex-col justify-between items-center border border-gray-300 rounded-md py-5 px-2 overflow-hidden mt-2 ml-2">
       <div className="header-wrapper flex gap-x-2 items-center">
         <GiCampingTent className="w-10 h-10" />
         <span
           className="text-center text-xl font-bold bg-gradient-to-r
          "
         >
-          <Link to={'/'}>Camping Guide</Link>
+          <Link to={'/'} className="text-sm">
+            Camping Guide
+          </Link>
         </span>
         {/* <FaTree className="w-8 h-8" /> */}
       </div>
@@ -69,9 +67,9 @@ const Navbar = ({ menuIdx }) => {
             <li
               key={idx}
               className={`${
-                menu.idx === menuIdx ? 'bg-[#CDE8E5]' : ''
-              } px-5 py-2 border border-[#CDE8E5]
-               hover:bg-[#CDE8E5] rounded-md`}
+                menu.idx === menuIdx ? 'bg-white' : ''
+              } px-5 py-2 bg-white
+               hover:bg-gray-200 rounded-md shadow-md`}
             >
               <Link
                 to={menu.to}

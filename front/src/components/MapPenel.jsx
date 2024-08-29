@@ -45,7 +45,7 @@ const MapPenel = ({ center, zoom }) => {
   //   });
   // });
 
-  return <div className="map w-[80%] h-[90%]" ref={mapRef}></div>;
+  return <div className="map w-[80%] h-[100%]" ref={mapRef}></div>;
 };
 
 export default MapPenel;
