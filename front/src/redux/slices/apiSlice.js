@@ -4,14 +4,12 @@ import {
   POST_AREAS_API_URL,
   DELETE_AREAS_API_URL,
   UPDATE_ADD_AREAS_URL,
-  UPDATE_AREAS_API_URL,
 } from "../../utils/apiUrl";
 import {
   deleteRequest,
   getRequest,
   patchRequest,
   postRequest,
-  putRequest,
 } from "../../utils/requestMethods";
 
 const getItemsFetchThunk = (actionType, apiURL) => {
@@ -26,6 +24,10 @@ const postItemFetchThunk = (actionType, apiURL) => {
   return createAsyncThunk(actionType, async (postData) => {
     // console.log(postData);
     const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(postData), // 표준 json 문자열로 변환
     };
     return await postRequest(apiURL, options);
@@ -44,19 +46,16 @@ const deleteItemFetchThunk = (actionType, apiURL) => {
 };
 
 const updateAddFetchThunk = (actionType, apiURL) => {
-  return createAsyncThunk(actionType, async (options) => {
+  return createAsyncThunk(actionType, async (data) => {
     // console.log(options);
-    return await patchRequest(apiURL, options);
-  });
-};
-
-const updateItemFetchThunk = (actionType, apiURL) => {
-  return createAsyncThunk(actionType, async (updateData) => {
-    // console.log(updateData);
     const options = {
-      body: JSON.stringify(updateData), // 표준 json 문자열로 변환
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     };
-    return await putRequest(apiURL, options);
+    return await patchRequest(apiURL, options);
   });
 };
 
@@ -68,11 +67,6 @@ export const fetchGetItemsData = getItemsFetchThunk(
 export const fetchPostItemData = postItemFetchThunk(
   "fetchPostItem",
   POST_AREAS_API_URL
-);
-
-export const fetchPutItemData = updateItemFetchThunk(
-  "fetchPutItem",
-  UPDATE_AREAS_API_URL
 );
 
 export const fetchDeleteItemData = deleteItemFetchThunk(
@@ -101,7 +95,6 @@ const apiSlice = createSlice({
     postItemData: null,
     deleteItemData: null,
     updateAddData: null,
-    updatePutData: null,
     isError: false,
   },
   extraReducers: (builder) => {
@@ -116,9 +109,7 @@ const apiSlice = createSlice({
       )
       .addCase(fetchDeleteItemData.rejected, handleRejected)
       .addCase(fetchUpdateAddData.fulfilled, handleFullfilled("updateAddData"))
-      .addCase(fetchUpdateAddData.rejected, handleRejected)
-      .addCase(fetchPutItemData.fulfilled, handleFullfilled("updatePutData"))
-      .addCase(fetchPutItemData.rejected, handleRejected);
+      .addCase(fetchUpdateAddData.rejected, handleRejected);
   },
 });
 

@@ -3,11 +3,12 @@ import { IoIosArrowDropleft } from "react-icons/io";
 import { IoIosArrowDropright } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
   fetchDeleteItemData,
   fetchGetItemsData,
+  fetchPostItemData,
   fetchUpdateAddData,
 } from "../../redux/slices/apiSlice";
 
@@ -17,14 +18,16 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
   const [selectedCampings, setSelectedCampings] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useDispatch();
-  const [isAdd, setIsAdd] = useState(areas?.isAdd || false);
+  const [isAdd, setIsAdd] = useState(areas?.isAdd, false);
 
-  const { _id, title, isadd, userid } = areas || {};
+  const user = useSelector((state) => state.auth.authData);
 
   // areas 객체가 업데이트 될 때 isAdd 상태 업데이트
   useEffect(() => {
     if (areas) {
       setIsAdd(areas.isAdd || false);
+      setSelectedCampings(areas);
+      setCurrentIndex(0);
     }
   }, [areas]);
 
@@ -99,43 +102,53 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
   // 하트 클릭 시 호출되는 함수
 
   const changeAdd = async () => {
-    const newIsAdd = !isAdd;
-    setIsAdd(newIsAdd);
+    if (!currentCamping) {
+      console.error("캠핑장 정보가 없습니다.");
+      toast.error("캠핑장 정보가 없습니다.");
+      return;
+    }
+    console.log("currentCamping:", currentCamping.facltNm); // 현재 캠핑장 정보 확인
+    console.log("currentCamping.id:", currentCamping.id); // ID 확인
 
-    const updateAddData = {
-      itemid: areas._id,
-      isadd: newIsAdd,
-    };
+    if (isAdd) {
+      // 채워진 하트 클릭 시 캠핑장 삭제
+      const confirm = window.confirm("캠핑장을 삭제하시겠습니까?");
+      if (!confirm) return;
 
-    const options = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updateAddData),
-    };
-    await dispatch(fetchUpdateAddData(options)).unwrap();
-    newIsAdd
-      ? toast.success("캠핑장을 추가하였습니다.")
-      : toast.success("캠핑장 추가를 실패했습니다.");
-  };
+      try {
+        console.log("캠핑장 삭제 시도");
+        await dispatch(fetchDeleteItemData(currentCamping.facltNm)).unwrap();
+        // await dispatch(fetchGetItemsData()).unwrap();
+        toast.success("캠핑장이 삭제되었습니다.");
+        setIsAdd(false);
+      } catch (error) {
+        toast.error("캠핑장 삭제에 실패했습니다.");
+        console.error(error);
+      }
+    } else {
+      // 빈 하트 클릭 시 캠핑장 추가
+      const updateAddData = {
+        name: currentCamping.facltNm,
+        location: currentCamping.addr1,
+        image: currentCamping.firstImageUrl || "No Image",
+        isadd: true,
+        googleId: "google",
+      };
 
-  const deleteItem = async () => {
-    const confirm = window.confirm("캠핑장을 삭제하시겠습니까 ?");
-
-    if (!confirm) return;
-
-    try {
-      await dispatch(fetchDeleteItemData(areas._id)).unwrap();
-      toast.success("캠핑장이 삭제되었습니다.");
-      await dispatch(fetchGetItemsData(areas.userid)).unwrap();
-    } catch (error) {
-      toast.error("캠핑장 삭제에 실패했습니다.");
-      console.error(error);
+      try {
+        console.log("캠핑장 추가 시도");
+        console.log(updateAddData);
+        await dispatch(fetchPostItemData(updateAddData)).unwrap();
+        toast.success("캠핑장을 추가하였습니다.");
+        setIsAdd(true);
+      } catch (error) {
+        toast.error("캠핑장 추가에 실패했습니다.");
+        console.error("Error updating data:", error);
+      }
     }
   };
-  console.log("Areas:", areas);
-  console.log("Areas in Parent:", areas);
+  // console.log("Areas:", areas);
+  // console.log("Areas in Parent:", areas);
 
   return (
     <div
@@ -200,7 +213,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
             className="absolute bottom-5 right-5 text-xl"
             onClick={changeAdd}
           >
-            {isAdd ? <FaHeart /> : <FaRegHeart onClick={deleteItem} />}
+            {isAdd ? <FaHeart /> : <FaRegHeart />}
           </button>
         </div>
         <button onClick={handleNext}>
