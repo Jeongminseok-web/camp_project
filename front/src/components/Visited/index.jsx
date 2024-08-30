@@ -1,12 +1,6 @@
-<<<<<<< Updated upstream
-import React from 'react';
-import Navbar from '../Navbar';
-import ItemPanel from './ItemPanel';
-=======
 import React from "react";
 import Navbar from "../Navbar";
 import ItemPanel from "./ItemPanel";
->>>>>>> Stashed changes
 
 const index = () => {
   return (
