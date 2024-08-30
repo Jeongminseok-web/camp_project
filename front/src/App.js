@@ -4,6 +4,8 @@ import Area from "./components/Area";
 import Theme from "./components/Theme";
 import Hot from "./components/Hot";
 import Visited from "./components/Visited";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -16,6 +18,13 @@ function App() {
           <Route path="/hot" element={<Hot />} />
           <Route path="/visited" element={<Visited />} />
         </Routes>
+
+        <ToastContainer
+          position="top-center"
+          autoClose={1000}
+          theme="light"
+          closeOnClick
+        />
       </div>
     </BrowserRouter>
   );

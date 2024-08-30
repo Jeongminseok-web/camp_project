@@ -19,14 +19,21 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
   const [selectedCampings, setSelectedCampings] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useDispatch();
-  const [isAdd, setIsAdd] = useState(areas?.isAdd, false);
+  const [isAddMap, setIsAddMap] = useState({});
 
   const user = useSelector((state) => state.auth.authData);
+  // console.log(user); // authData 전체 구조를 확인합니다.
+  const googleId = user?.sub;
+  // console.log(googleId); // googleId가 제대로 나오는지 확인합니다.
 
   // areas 객체가 업데이트 될 때 isAdd 상태 업데이트
   useEffect(() => {
     if (areas) {
-      setIsAdd(areas.isAdd || false);
+      const initialIsAddMap = {};
+      areas.forEach((area) => {
+        initialIsAddMap[area.facltNm] = area.isAdd || false;
+      });
+      setIsAddMap(initialIsAddMap);
       setSelectedCampings(areas);
       setCurrentIndex(0);
     }
@@ -99,7 +106,9 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
   };
 
   const currentCamping = selectedCampings[currentIndex];
-
+  const isCurrentAdd = currentCamping
+    ? isAddMap[currentCamping.facltNm]
+    : false;
   // 하트 클릭 시 호출되는 함수
 
   const changeAdd = async () => {
@@ -111,7 +120,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
     console.log('currentCamping:', currentCamping.facltNm); // 현재 캠핑장 정보 확인
     console.log('currentCamping.id:', currentCamping.id); // ID 확인
 
-    if (isAdd) {
+    if (isCurrentAdd) {
       // 채워진 하트 클릭 시 캠핑장 삭제
       const confirm = window.confirm('캠핑장을 삭제하시겠습니까?');
       if (!confirm) return;
@@ -120,8 +129,16 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
         console.log('캠핑장 삭제 시도');
         await dispatch(fetchDeleteItemData(currentCamping.facltNm)).unwrap();
         // await dispatch(fetchGetItemsData()).unwrap();
+<<<<<<< Updated upstream
         toast.success('캠핑장이 삭제되었습니다.');
         setIsAdd(false);
+=======
+        toast.success("캠핑장이 삭제되었습니다.");
+        setIsAddMap((prev) => ({
+          ...prev,
+          [currentCamping.facltNm]: false,
+        }));
+>>>>>>> Stashed changes
       } catch (error) {
         toast.error('캠핑장 삭제에 실패했습니다.');
         console.error(error);
@@ -133,15 +150,27 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
         location: currentCamping.addr1,
         image: currentCamping.firstImageUrl || 'No Image',
         isadd: true,
+<<<<<<< Updated upstream
         googleId: 'google',
+=======
+        googleId: user?.sub,
+>>>>>>> Stashed changes
       };
 
       try {
         console.log('캠핑장 추가 시도');
         console.log(updateAddData);
         await dispatch(fetchPostItemData(updateAddData)).unwrap();
+<<<<<<< Updated upstream
         toast.success('캠핑장을 추가하였습니다.');
         setIsAdd(true);
+=======
+        toast.success("캠핑장을 추가하였습니다.");
+        setIsAddMap((prev) => ({
+          ...prev,
+          [currentCamping.facltNm]: true,
+        }));
+>>>>>>> Stashed changes
       } catch (error) {
         toast.error('캠핑장 추가에 실패했습니다.');
         console.error('Error updating data:', error);
@@ -216,7 +245,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
             className="absolute bottom-5 right-5 text-xl"
             onClick={changeAdd}
           >
-            {isAdd ? <FaHeart /> : <FaRegHeart />}
+            {isCurrentAdd ? <FaHeart /> : <FaRegHeart />}
           </button>
         </div>
         <button onClick={handleNext}>

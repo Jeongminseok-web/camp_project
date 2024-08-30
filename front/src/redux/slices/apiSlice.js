@@ -41,7 +41,8 @@ const deleteItemFetchThunk = (actionType, apiURL) => {
       method: "DELETE",
     };
     const fullPath = `${apiURL}/${id}`;
-    return await deleteRequest(fullPath, options);
+    await deleteRequest(fullPath, options);
+    return id;
   });
 };
 
@@ -91,7 +92,7 @@ const handleRejected = (state, action) => {
 const apiSlice = createSlice({
   name: "api",
   initialState: {
-    getItemData: null,
+    getItemData: [],
     postItemData: null,
     deleteItemData: null,
     updateAddData: null,
