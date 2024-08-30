@@ -1,16 +1,18 @@
+// HotPanel.jsx
 import React, { useState, useEffect } from 'react';
-
 import { FaCrown } from 'react-icons/fa6';
-import { CiSquarePlus } from 'react-icons/ci';
 import Modal from '../items/Modal';
+import HotItem from './HotItem';
+import { DotLoader } from 'react-spinners';
 
 const HotPanel = () => {
   const [hotData, setHotData] = useState([]);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false); // 모달 창 상태
-  const [modalContent, setModalContent] = useState(null); // 모달에 표시할 내용
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
+  const itemsPerPage = 4; // 페이지당 표시할 항목 수
 
-  // contentId 순서대로 정렬하고자 하는 contentId 목록
   const contentIdOrder = [
     1776, 6975, 2703, 2422, 8014, 6808, 2999, 2217, 2672, 7767, 6959, 3139,
     1601, 3394, 7079, 7589, 306, 7315, 2439, 3320,
@@ -23,9 +25,6 @@ const HotPanel = () => {
         const response = await fetch(url);
         const data = await response.json();
 
-        // API 응답 구조 확인
-        console.log('API 응답 데이터:', data);
-
         if (
           data.response &&
           data.response.body &&
@@ -34,22 +33,17 @@ const HotPanel = () => {
         ) {
           const items = data.response.body.items.item;
 
-          // contentIdOrder에 맞춰 데이터 필터링 및 정렬
           const filteredAndSortedData = contentIdOrder
             .map((contentId) =>
               items.find((item) => parseInt(item.contentId) === contentId)
             )
-            .filter(Boolean); // 유효한 데이터만 필터링
-
-          console.log('필터링 및 정렬된 데이터:', filteredAndSortedData);
+            .filter(Boolean);
 
           setHotData(filteredAndSortedData);
         } else {
-          console.error('API 응답 구조가 예상과 다릅니다.');
           setError('API 응답 구조가 예상과 다릅니다.');
         }
       } catch (error) {
-        console.error('데이터를 가져오는 중 오류 발생:', error);
         setError('데이터를 가져오는 중 오류 발생');
       }
     };
@@ -67,39 +61,42 @@ const HotPanel = () => {
     setModalContent(null);
   };
 
+  // 현재 페이지에 해당하는 데이터를 계산
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = hotData.slice(indexOfFirstItem, indexOfLastItem);
+
+  // 페이지 번호 배열 생성
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(hotData.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
   return (
-    <div className="hot-panel mt-2 ml-4 mr-4">
-      <FaCrown />
+    <div className="hot-panel mt-12 ml-4 mr-4">
+      <div className="flex justify-center">
+        <FaCrown className="w-5 mt-4 mr-3" />
+        <p className="text-lg font-bold mt-3">전국 캠핑장 순위</p>
+      </div>
+
       {error ? (
         <p>{error}</p>
       ) : hotData.length > 0 ? (
-        <div className="w-full grid grid-cols-3 gap-2">
-          {hotData.map((item, index) => (
-            <div
+        <div className="gap-2">
+          {currentItems.map((item, index) => (
+            <HotItem
               key={item.contentId}
-              className="border border-gray-300 rounded-md p-4"
-            >
-              <h3 className="text-lg font-bold flex justify-between">
-                {index + 1}위: {item.facltNm}
-                <button onClick={() => openModal(item)} className="ml-4">
-                  <CiSquarePlus />
-                </button>
-              </h3>
-              <div className="flex items-center">
-                <img
-                  src={item.firstImageUrl}
-                  className="w-[20%] h[10%] mt-5"
-                ></img>
-                <div className="ml-5">
-                  <p>주소: {item.addr1}</p>
-                  <p>전화번호: {item.tel}</p>
-                </div>
-              </div>
-            </div>
+              item={item}
+              index={index}
+              indexOfFirstItem={indexOfFirstItem}
+              openModal={openModal}
+            />
           ))}
         </div>
       ) : (
-        <p>로딩중...</p>
+        <div className="flex justify-center items-center mt-10">
+          <DotLoader color="#c9c9c9" loading size={30} />
+        </div>
       )}
 
       {modalContent && (
@@ -142,6 +139,28 @@ const HotPanel = () => {
           </p>
         </Modal>
       )}
+      <nav
+        aria-label="Page navigation example"
+        className="mt-4 flex justify-center"
+      >
+        <ul className="flex items-center -space-x-px h-10 text-base">
+          {pageNumbers.map((number) => (
+            <li key={number}>
+              <a
+                onClick={() => setCurrentPage(number)}
+                className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
+                  number === currentPage
+                    ? 'text-blue-600 border border-blue-300 bg-blue-50'
+                    : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                }`}
+                href="#"
+              >
+                {number}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 };

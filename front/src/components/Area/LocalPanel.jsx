@@ -1,12 +1,17 @@
+// LocalPanel.jsx
 import React, { useState, useEffect } from 'react';
 import Modal from '../items/Modal';
-import { CiSquarePlus } from 'react-icons/ci';
-import { FaRegHeart } from 'react-icons/fa';
+import LocalItem from './LocalItem';
+import LocalNav from './LocalNav';
+import MapPenel from '../MapPenel';
 
-const LocalPanel = ({ selectedRegion }) => {
+const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
   const [campingData, setCampingData] = useState([]);
-  const [showModal, setShowModal] = useState(false); // 모달 창 상태
-  const [modalContent, setModalContent] = useState(null); // 모달에 표시할 내용
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const maxPagesToShow = 5;
 
   const fetchCampingData = async () => {
     const url = `http://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=jspS2aezFN%2BfwauFvRfn13nPPHKDJBYHfQ8UVy%2F9b1eGfiK86%2F0f3580%2BkQiP2hvdJ2mvljcvT0m1RZ5cqeoTg%3D%3D&_type=json`;
@@ -28,6 +33,10 @@ const LocalPanel = ({ selectedRegion }) => {
     }
   };
 
+  useEffect(() => {
+    fetchCampingData();
+  }, []);
+
   const filteredCampingData = selectedRegion.시군구명
     ? campingData.filter(
         (camping) =>
@@ -37,12 +46,9 @@ const LocalPanel = ({ selectedRegion }) => {
     : [];
 
   useEffect(() => {
-    fetchCampingData();
-  }, []);
-
-  useEffect(() => {
     console.log('선택된 지역:', selectedRegion);
     console.log('필터링된 데이터:', filteredCampingData);
+    setCurrentPage(1); // 새로운 지역이 선택될 때마다 페이지 번호를 초기화
   }, [selectedRegion, campingData]);
 
   const openModal = (item) => {
@@ -55,29 +61,154 @@ const LocalPanel = ({ selectedRegion }) => {
     setModalContent(null);
   };
 
+  // 현재 페이지에 해당하는 데이터 계산
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredCampingData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  // 페이지 번호 배열 생성
+  const totalPages = Math.ceil(filteredCampingData.length / itemsPerPage);
+  let startPage = 1;
+  let endPage = maxPagesToShow;
+
+  if (totalPages <= maxPagesToShow) {
+    endPage = totalPages;
+  } else if (currentPage <= Math.floor(maxPagesToShow / 2)) {
+    endPage = maxPagesToShow;
+  } else if (currentPage + Math.floor(maxPagesToShow / 2) >= totalPages) {
+    startPage = totalPages - maxPagesToShow + 1;
+    endPage = totalPages;
+  } else {
+    startPage = currentPage - Math.floor(maxPagesToShow / 2);
+    endPage = currentPage + Math.floor(maxPagesToShow / 2);
+  }
+
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
   return (
-    <div className="camping-grid">
-      {filteredCampingData.length > 0 ? (
-        <div className="grid grid-cols-3 gap-2 m-3">
-          {filteredCampingData.map((camping, index) => (
-            <div
-              key={index}
-              className="bg-white border border-gray-300 rounded-md p-4"
-            >
-              <h3 className="text-lg font-bold mb-2 flex justify-between">
-                {camping.facltNm}
-                <button onClick={() => openModal(camping)} className="ml-4">
-                  <CiSquarePlus />
-                </button>
-              </h3>
-              <img src={camping.firstImageUrl} className="w-full h-auto" />
-              <p className="mt-2">주소: {camping.addr1}</p>
-              <p className="mt-2">전화번호: {camping.tel}</p>
+    <div className="w-full h-full flex flex-col">
+      <div className="w-full pb-2">
+        <LocalNav onRegionChange={onRegionChange} />
+      </div>
+
+      <div className="w-full h-full flex justify-center">
+        <MapPenel center={center} zoom={zoom} />
+        <div className="w-full">
+          {currentItems.length > 0 ? (
+            <div className="grid grid-cols-3 gap-2 m-3">
+              {currentItems.map((camping, index) => (
+                <LocalItem
+                  key={index}
+                  camping={camping}
+                  openModal={openModal}
+                />
+              ))}
             </div>
-          ))}
+          ) : (
+            <div className="flex justify-center">
+              <p>캠핑장의 위치를 보고싶은 지역을 선택해 주세요.</p>
+            </div>
+          )}
         </div>
-      ) : (
-        <p>캠핑장의 위치를 보고싶은 지역을 선택해 주세요.</p>
+      </div>
+
+      {/* 페이지네이션 */}
+      {filteredCampingData.length > itemsPerPage && (
+        <nav
+          aria-label="Page navigation example"
+          className="mt-4 flex justify-center"
+        >
+          <ul className="flex items-center -space-x-px h-10 text-base">
+            <li>
+              <a
+                href="#"
+                className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
+                  currentPage === 1
+                    ? 'cursor-not-allowed text-gray-400'
+                    : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                }`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (currentPage > 1) setCurrentPage(currentPage - 1);
+                }}
+              >
+                <span className="sr-only">Previous</span>
+                <svg
+                  className="w-3 h-3 rtl:rotate-180"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 6 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 1 1 5l4 4"
+                  />
+                </svg>
+              </a>
+            </li>
+
+            {pageNumbers.map((number) => (
+              <li key={number}>
+                <a
+                  href="#"
+                  className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
+                    number === currentPage
+                      ? 'text-blue-600 border border-blue-300 bg-blue-50'
+                      : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                  }`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentPage(number);
+                  }}
+                >
+                  {number}
+                </a>
+              </li>
+            ))}
+
+            <li>
+              <a
+                href="#"
+                className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
+                  currentPage === totalPages
+                    ? 'cursor-not-allowed text-gray-400'
+                    : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                }`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                }}
+              >
+                <span className="sr-only">Next</span>
+                <svg
+                  className="w-3 h-3 rtl:rotate-180"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 6 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 9 4-4-4-4"
+                  />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
       )}
 
       {modalContent && (

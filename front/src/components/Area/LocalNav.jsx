@@ -60,7 +60,7 @@ const LocalNav = ({ onRegionChange }) => {
   };
 
   return (
-    <div className="local-nav-wrapper overflow-x-auto whitespace-nowrap py-2 mt-3 flex">
+    <div className="overflow-x-auto whitespace-nowrap py-2 mt-12 flex w-full">
       {doNmOptions.map((doNm, index) => (
         <div key={index} className="mx-2">
           <div>

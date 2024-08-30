@@ -48,34 +48,19 @@ const Navbar = ({ menuIdx }) => {
   };
 
   return (
-    <nav className="w-[20%] h-full flex flex-col justify-between items-center border border-gray-300 rounded-md py-5 px-2 overflow-hidden mt-2 ml-2">
-      <div className="header-wrapper flex gap-x-2 items-center">
-        <GiCampingTent className="w-10 h-10" />
-        <span
-          className="text-center text-xl font-bold bg-gradient-to-r
-         "
-        >
-          <Link to={'/'} className="text-sm">
-            Camping Guide
-          </Link>
-        </span>
-        {/* <FaTree className="w-8 h-8" /> */}
-      </div>
-      <div className="menubar-wrapper">
-        <ul className="flex flex-col gap-y-4 text-md font-semibold">
+    <nav className="bg-white w-[10%] h-[100vh] flex flex-col justify-between border border-gray-200 px-2 overflow-hidden">
+      <div className="menubar-wrapper flex justify-normal">
+        <ul className="flex flex-col gap-y-3 text-md font-semibold mt-14">
           {navMenus.map((menu, idx) => (
             <li
               key={idx}
               className={`${
                 menu.idx === menuIdx ? 'bg-white' : ''
               } px-5 py-2 bg-white
-               hover:bg-gray-200 rounded-md shadow-md`}
+               hover:bg-gray-200 rounded-md`}
+              style={{ minWidth: '160px' }}
             >
-              <Link
-                to={menu.to}
-                className="flex gap-x-4 items-center
-              justify-between"
-              >
+              <Link to={menu.to} className="flex gap-x-4 items-center">
                 {menu.icon}
                 {menu.label}
               </Link>
@@ -84,12 +69,27 @@ const Navbar = ({ menuIdx }) => {
         </ul>
       </div>
 
+      <nav class="bg-white dark:bg-gray-900 fixed w-full h-[5%] z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+        <div className="header-wrapper flex gap-x-2 justify-normal items-center ml-5">
+          <GiCampingTent className="w-10 h-10 mt-1" />
+          <span
+            className="text-center text-xl font-bold bg-gradient-to-r
+         "
+          >
+            <Link to={'/'} className="text-sm">
+              Camping Guide
+            </Link>
+          </span>
+          {/* <FaTree className="w-8 h-8" /> */}
+        </div>
+      </nav>
+
       <div className="login-wrapper">
         {isAuth ? (
           <button
             onClick={handleLogoutClick}
             className="flex justify-center items-center gap-2
-           bg-white text-black py-2 px-4 rounded-md font-semibold"
+           bg-white text-black py-2 px-4 mb-4 rounded-md font-semibold border border-gray-200"
           >
             <FcGoogle className="h-5 w-5" />
             {name}님 Logout

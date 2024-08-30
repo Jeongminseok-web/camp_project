@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { IoIosArrowDropleft } from "react-icons/io";
-import { IoIosArrowDropright } from "react-icons/io";
-import { FaRegHeart } from "react-icons/fa6";
-import { FaHeart } from "react-icons/fa6";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from 'react';
+import { IoIosArrowDropleft } from 'react-icons/io';
+import { IoIosArrowDropright } from 'react-icons/io';
+import { FaRegHeart } from 'react-icons/fa6';
+import { FaHeart } from 'react-icons/fa6';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import {
   fetchDeleteItemData,
   fetchGetItemsData,
   fetchPostItemData,
   fetchUpdateAddData,
-} from "../../redux/slices/apiSlice";
+} from '../../redux/slices/apiSlice';
+import { DotLoader } from 'react-spinners';
 
 const ModalItem = ({ selectedRegion, onClose, areas }) => {
   const [data, setData] = useState([]);
@@ -34,7 +35,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
   // 데이터 가져오는 함수
   const fetchData = () => {
     fetch(
-      "http://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=jspS2aezFN%2BfwauFvRfn13nPPHKDJBYHfQ8UVy%2F9b1eGfiK86%2F0f3580%2BkQiP2hvdJ2mvljcvT0m1RZ5cqeoTg%3D%3D&_type=json"
+      'http://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=jspS2aezFN%2BfwauFvRfn13nPPHKDJBYHfQ8UVy%2F9b1eGfiK86%2F0f3580%2BkQiP2hvdJ2mvljcvT0m1RZ5cqeoTg%3D%3D&_type=json'
     )
       .then((response) => response.json())
       .then((data) => {
@@ -42,7 +43,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
         // console.log("Full API response:", data);
         // console.log("Fetched Data", data.response.body.items.item);
       }) // 데이터를 가져와서 상태 업데이트
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch((error) => console.error('Error fetching data:', error));
   };
 
   // 컴포넌트가 마운트될 때 실행되는 부분
@@ -103,26 +104,26 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
 
   const changeAdd = async () => {
     if (!currentCamping) {
-      console.error("캠핑장 정보가 없습니다.");
-      toast.error("캠핑장 정보가 없습니다.");
+      console.error('캠핑장 정보가 없습니다.');
+      toast.error('캠핑장 정보가 없습니다.');
       return;
     }
-    console.log("currentCamping:", currentCamping.facltNm); // 현재 캠핑장 정보 확인
-    console.log("currentCamping.id:", currentCamping.id); // ID 확인
+    console.log('currentCamping:', currentCamping.facltNm); // 현재 캠핑장 정보 확인
+    console.log('currentCamping.id:', currentCamping.id); // ID 확인
 
     if (isAdd) {
       // 채워진 하트 클릭 시 캠핑장 삭제
-      const confirm = window.confirm("캠핑장을 삭제하시겠습니까?");
+      const confirm = window.confirm('캠핑장을 삭제하시겠습니까?');
       if (!confirm) return;
 
       try {
-        console.log("캠핑장 삭제 시도");
+        console.log('캠핑장 삭제 시도');
         await dispatch(fetchDeleteItemData(currentCamping.facltNm)).unwrap();
         // await dispatch(fetchGetItemsData()).unwrap();
-        toast.success("캠핑장이 삭제되었습니다.");
+        toast.success('캠핑장이 삭제되었습니다.');
         setIsAdd(false);
       } catch (error) {
-        toast.error("캠핑장 삭제에 실패했습니다.");
+        toast.error('캠핑장 삭제에 실패했습니다.');
         console.error(error);
       }
     } else {
@@ -130,20 +131,20 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
       const updateAddData = {
         name: currentCamping.facltNm,
         location: currentCamping.addr1,
-        image: currentCamping.firstImageUrl || "No Image",
+        image: currentCamping.firstImageUrl || 'No Image',
         isadd: true,
-        googleId: "google",
+        googleId: 'google',
       };
 
       try {
-        console.log("캠핑장 추가 시도");
+        console.log('캠핑장 추가 시도');
         console.log(updateAddData);
         await dispatch(fetchPostItemData(updateAddData)).unwrap();
-        toast.success("캠핑장을 추가하였습니다.");
+        toast.success('캠핑장을 추가하였습니다.');
         setIsAdd(true);
       } catch (error) {
-        toast.error("캠핑장 추가에 실패했습니다.");
-        console.error("Error updating data:", error);
+        toast.error('캠핑장 추가에 실패했습니다.');
+        console.error('Error updating data:', error);
       }
     }
   };
@@ -159,7 +160,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
         <button onClick={handlePrevious}>
           <IoIosArrowDropleft className="text-6xl text-white" />
         </button>
-        <div className="border border-neutral-600 bg-slate-300 w-1/2 h-[70vh] overflow-auto p-2 relative">
+        <div className="border border-neutral-600 bg-white w-1/2 h-[70vh] overflow-auto p-2 relative">
           <div>
             {currentCamping ? (
               <div className="p-2">
@@ -185,27 +186,29 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
                   {currentCamping.addr1 ? (
                     <p className="">오시는길 : {currentCamping.addr1}</p>
                   ) : (
-                    ""
+                    ''
                   )}
                   {currentCamping.tel ? (
                     <p>전화번호 : {currentCamping.tel}</p>
                   ) : (
-                    ""
+                    ''
                   )}
                   {currentCamping.sbrsCl ? (
                     <p>편의 시설 : {currentCamping.sbrsCl}</p>
                   ) : (
-                    ""
+                    ''
                   )}
                   {currentCamping.featureNm ? (
                     <p>캠핑장 특징 : {currentCamping.featureNm}</p>
                   ) : (
-                    ""
+                    ''
                   )}
                 </div>
               </div>
             ) : (
-              <p>캠핑장 로딩중입니다.</p>
+              <div className="flex justify-center items-center h-full mt-10">
+                <DotLoader color="#c9c9c9" loading size={30} />
+              </div>
             )}
           </div>
 

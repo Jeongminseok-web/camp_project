@@ -1,7 +1,6 @@
+// index.jsx
 import React, { useState } from 'react';
 import Navbar from '../Navbar';
-import LocalNav from './LocalNav';
-import MapPenel from '../MapPenel';
 import LocalPanel from './LocalPanel';
 
 const Index = () => {
@@ -28,16 +27,13 @@ const Index = () => {
   return (
     <div className="w-[100%] h-[98vh] m-auto flex">
       <Navbar />
-      <div className="w-[80%] h-full flex flex-col pl-2">
-        <div className="pb-2">
-          <LocalNav onRegionChange={handleRegionChange} />
-        </div>
-        <div className="w-full h-full flex">
-          <MapPenel center={center} zoom={zoom} />
-          <div className="w-full">
-            <LocalPanel selectedRegion={selectedRegion} />
-          </div>
-        </div>
+      <div className="w-[80%] h-full flex flex-col ml-5">
+        <LocalPanel
+          selectedRegion={selectedRegion}
+          onRegionChange={handleRegionChange}
+          center={center}
+          zoom={zoom}
+        />
       </div>
     </div>
   );

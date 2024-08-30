@@ -5,10 +5,14 @@ import { Link } from 'react-router-dom';
 const ThemeNav = ({ onSelectTheme }) => {
   return (
     <div className="px-2">
-      <div className="w-full h-[full] border border-gray-300 rounded-md px-5 py-2 mt-2">
+      <div className="w-full h-[full] mt-14">
         <ul className="flex justify-between items-center">
           {themenavbar.map((menu, idx) => (
-            <li key={idx} className="">
+            <li
+              key={idx}
+              className="border boder-gray-200 rounded-md p-2 flex justify-center hover:bg-gray-200"
+              style={{ minWidth: '120px' }}
+            >
               <Link to="#" onClick={() => onSelectTheme(menu)}>
                 {menu.label}
               </Link>
