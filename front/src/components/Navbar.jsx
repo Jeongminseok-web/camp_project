@@ -35,6 +35,8 @@ const Navbar = ({ menuIdx }) => {
         client_id: googleClientId,
         callback: handleLoginSucess,
       });
+    } else {
+      console.log('Google object is not available');
     }
   }, [googleClientId, handleLoginSucess]);
 
@@ -43,6 +45,7 @@ const Navbar = ({ menuIdx }) => {
   };
 
   const handleLogoutClick = () => {
+    localStorage.removeItem('authData');
     dispatch(logout());
     setIsAuth(false);
   };
@@ -57,7 +60,7 @@ const Navbar = ({ menuIdx }) => {
               className={`${
                 menu.idx === menuIdx ? 'bg-white' : ''
               } px-5 py-2 bg-white
-               hover:bg-gray-200 rounded-md`}
+               hover:bg-cyan-100 rounded-md`}
               style={{ minWidth: '160px' }}
             >
               <Link to={menu.to} className="flex gap-x-4 items-center">
@@ -69,14 +72,17 @@ const Navbar = ({ menuIdx }) => {
         </ul>
       </div>
 
-      <nav class="bg-white dark:bg-gray-900 fixed w-full h-[5%] z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+      <nav className="bg-white dark:bg-gray-900 fixed w-full h-[5%] z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
         <div className="header-wrapper flex gap-x-2 justify-normal items-center ml-5">
-          <GiCampingTent className="w-10 h-10 mt-1" />
+          <GiCampingTent className="w-10 h-10 mt-1 text-cyan-400" />
           <span
             className="text-center text-xl font-bold bg-gradient-to-r
          "
           >
-            <Link to={'/'} className="text-sm">
+            <Link
+              to={'/'}
+              className="test2 text-md text-cyan-400 drop-shadow-sm"
+            >
               Camping Guide
             </Link>
           </span>

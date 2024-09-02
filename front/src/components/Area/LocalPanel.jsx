@@ -14,7 +14,7 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
   const maxPagesToShow = 5;
 
   const fetchCampingData = async () => {
-    const url = `http://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=jspS2aezFN%2BfwauFvRfn13nPPHKDJBYHfQ8UVy%2F9b1eGfiK86%2F0f3580%2BkQiP2hvdJ2mvljcvT0m1RZ5cqeoTg%3D%3D&_type=json`;
+    const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json`;
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -112,7 +112,7 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
             </div>
           ) : (
             <div className="flex justify-center">
-              <p>캠핑장의 위치를 보고싶은 지역을 선택해 주세요.</p>
+              <p>지역을 선택해 주세요.</p>
             </div>
           )}
         </div>
@@ -163,7 +163,7 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
                   href="#"
                   className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
                     number === currentPage
-                      ? 'text-blue-600 border border-blue-300 bg-blue-50'
+                      ? 'text-cyan-500 border border-cyan-300 bg-cyan-50'
                       : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
                   }`}
                   onClick={(e) => {

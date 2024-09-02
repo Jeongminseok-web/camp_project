@@ -1,9 +1,9 @@
 // HotPanel.jsx
-import React, { useState, useEffect } from "react";
-import { FaCrown } from "react-icons/fa6";
-import Modal from "../items/Modal";
-import HotItem from "./HotItem";
-import { DotLoader } from "react-spinners";
+import React, { useState, useEffect } from 'react';
+import { FaCrown } from 'react-icons/fa6';
+import Modal from '../items/Modal';
+import HotItem from './HotItem';
+import { BeatLoader } from 'react-spinners';
 
 const HotPanel = () => {
   const [hotData, setHotData] = useState([]);
@@ -20,10 +20,13 @@ const HotPanel = () => {
 
   useEffect(() => {
     const fetchHotData = async () => {
-      const url = `http://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=jspS2aezFN%2BfwauFvRfn13nPPHKDJBYHfQ8UVy%2F9b1eGfiK86%2F0f3580%2BkQiP2hvdJ2mvljcvT0m1RZ5cqeoTg%3D%3D&_type=json`;
+      const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json`;
       try {
         const response = await fetch(url);
-        const data = await response.json();
+        const text = await response.text(); // JSON 파싱 전에 텍스트로 응답을 읽음
+        console.log('Response text:', text); // 응답을 로그로 출력
+
+        const data = JSON.parse(text);
 
         if (
           data.response &&
@@ -41,10 +44,11 @@ const HotPanel = () => {
 
           setHotData(filteredAndSortedData);
         } else {
-          setError("API 응답 구조가 예상과 다릅니다.");
+          setError('API 응답 구조가 예상과 다릅니다.');
         }
       } catch (error) {
-        setError("데이터를 가져오는 중 오류 발생");
+        console.error('Error fetching data:', error);
+        setError('데이터를 가져오는 중 오류 발생');
       }
     };
 
@@ -75,8 +79,9 @@ const HotPanel = () => {
   return (
     <div className="hot-panel mt-12 ml-4 mr-4">
       <div className="flex justify-center">
-        <FaCrown className="w-5 mt-4 mr-3" />
+        <FaCrown className="w-5 mt-5 mr-3" />
         <p className="text-lg font-bold mt-3">전국 캠핑장 순위</p>
+        <FaCrown className="w-5 mt-5 ml-3" />
       </div>
 
       {error ? (
@@ -94,8 +99,8 @@ const HotPanel = () => {
           ))}
         </div>
       ) : (
-        <div className="flex justify-center items-center mt-10">
-          <DotLoader color="#c9c9c9" loading size={30} />
+        <div className="flex justify-center items-center h-[70vh] w-full">
+          <BeatLoader color="#22d3ee" loading size={10} />
         </div>
       )}
 
@@ -108,22 +113,22 @@ const HotPanel = () => {
           <p className="mb-5">주소: {modalContent.addr1}</p>
 
           <p className="mb-5">
-            전화번호: {modalContent.tel ? modalContent.tel : "정보 없음"}
+            전화번호: {modalContent.tel ? modalContent.tel : '정보 없음'}
           </p>
 
           <p className="mb-5">
-            부대 시설: {modalContent.sbrsCl ? modalContent.sbrsCl : "정보 없음"}
+            부대 시설: {modalContent.sbrsCl ? modalContent.sbrsCl : '정보 없음'}
           </p>
           <p className="mb-5">
-            주변 시설:{" "}
+            주변 시설:{' '}
             {modalContent.posblFcltyCl
               ? modalContent.posblFcltyCl
-              : "정보 없음"}
+              : '정보 없음'}
           </p>
           <p>{modalContent.intro}</p>
 
           <p className="mt-10">
-            홈페이지:{" "}
+            홈페이지:{' '}
             {modalContent.resveUrl ? (
               <a
                 href={modalContent.resveUrl}
@@ -134,7 +139,7 @@ const HotPanel = () => {
                 {modalContent.resveUrl}
               </a>
             ) : (
-              "정보 없음"
+              '정보 없음'
             )}
           </p>
         </Modal>
@@ -150,8 +155,8 @@ const HotPanel = () => {
                 onClick={() => setCurrentPage(number)}
                 className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
                   number === currentPage
-                    ? "text-blue-600 border border-blue-300 bg-blue-50"
-                    : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                    ? 'text-cyan-500 border border-cyan-300 bg-cyan-50'
+                    : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
                 }`}
                 href="#"
               >

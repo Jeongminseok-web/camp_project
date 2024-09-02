@@ -10,7 +10,7 @@ const ThemeNav = ({ onSelectTheme }) => {
           {themenavbar.map((menu, idx) => (
             <li
               key={idx}
-              className="border boder-gray-200 rounded-md p-2 flex justify-center hover:bg-gray-200"
+              className="border border-gray-300 rounded-md p-2 flex justify-center hover:bg-cyan-100"
               style={{ minWidth: '120px' }}
             >
               <Link to="#" onClick={() => onSelectTheme(menu)}>

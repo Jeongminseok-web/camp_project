@@ -27,7 +27,7 @@ const Index = () => {
   return (
     <div className="w-[100%] h-[98vh] m-auto flex">
       <Navbar />
-      <div className="w-[80%] h-full flex flex-col ml-5">
+      <div className="w-[80%] h-full ml-5">
         <LocalPanel
           selectedRegion={selectedRegion}
           onRegionChange={handleRegionChange}

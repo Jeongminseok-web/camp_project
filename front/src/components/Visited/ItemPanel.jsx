@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Item from "./Item";
-import { fetchGetItemsData } from "../../redux/slices/apiSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import Item from './Item';
+import { fetchGetItemsData } from '../../redux/slices/apiSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ItemPanel = () => {
   const dispatch = useDispatch();
@@ -25,13 +25,14 @@ const ItemPanel = () => {
   };
 
   if (!googleId) {
-    return <div>로그인이 필요한 서비스 입니다.</div>; // 데이터가 로드되지 않은 경우 로딩 메시지를 표시합니다.
+    return <div className="mt-12">로그인이 필요한 서비스 입니다.</div>; // 데이터가 로드되지 않은 경우 로딩 메시지를 표시합니다.
   }
   if (localAreas.length === 0) {
-    return <div>방문한 캠핑장 정보가 없습니다.</div>; // 해당 사용자의 캠핑장이 없으면 메시지 표시
+    return <div className="mt-12">방문한 캠핑장 정보가 없습니다.</div>; // 해당 사용자의 캠핑장이 없으면 메시지 표시
   }
   return (
-    <div className="w-full h-full flex gap-x-2 flex-wrap gap-y-2">
+    <div className="w-full h-full flex mt-12">
+      {/* <p className="mt-12">???</p> */}
       {areas.map((area) => (
         <Item key={area.id} area={area} onRemove={handleItemRemove} />
       ))}

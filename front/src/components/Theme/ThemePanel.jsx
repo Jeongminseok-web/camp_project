@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../items/Modal';
 import ThemeItem from './ThemeItem';
 import ThemeNav from './ThemeNav';
-import { DotLoader } from 'react-spinners';
+import { BeatLoader } from 'react-spinners';
 
 const ThemePanel = ({ selectedTheme, onSelectTheme }) => {
   const [themeData, setThemeData] = useState([]);
@@ -17,7 +17,7 @@ const ThemePanel = ({ selectedTheme, onSelectTheme }) => {
       if (!selectedTheme) return;
 
       setLoading(true);
-      const url = `http://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=jspS2aezFN%2BfwauFvRfn13nPPHKDJBYHfQ8UVy%2F9b1eGfiK86%2F0f3580%2BkQiP2hvdJ2mvljcvT0m1RZ5cqeoTg%3D%3D&_type=json`;
+      const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json`;
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -92,8 +92,8 @@ const ThemePanel = ({ selectedTheme, onSelectTheme }) => {
       <ThemeNav onSelectTheme={onSelectTheme} />
 
       {loading ? (
-        <div className="flex justify-center items-center h-full mt-10">
-          <DotLoader color="#c9c9c9" loading size={30} />
+        <div className="flex justify-center items-center h-[70vh] w-full">
+          <BeatLoader color="#22d3ee" loading size={10} />
         </div>
       ) : themeData.length > 0 ? (
         <div className="grid grid-cols-3 gap-2 mt-2 p-2">
@@ -101,9 +101,7 @@ const ThemePanel = ({ selectedTheme, onSelectTheme }) => {
             <ThemeItem key={index} item={item} openModal={openModal} />
           ))}
         </div>
-      ) : (
-        selectedTheme && <p>해당 테마의 캠핑장이 없습니다.</p>
-      )}
+      ) : null}
 
       {modalContent && (
         <Modal
@@ -189,7 +187,7 @@ const ThemePanel = ({ selectedTheme, onSelectTheme }) => {
                   href="#"
                   className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
                     number === currentPage
-                      ? 'text-blue-600 border border-blue-300 bg-blue-50'
+                      ? 'text-cyan-500 border border-cyan-300 bg-cyan-50'
                       : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
                   }`}
                   onClick={(e) => {
