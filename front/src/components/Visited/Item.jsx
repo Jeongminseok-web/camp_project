@@ -70,7 +70,7 @@ const Item = ({ area, onRemove }) => {
     }
   };
   return (
-    <div className="w-[15%] h-[30vh] border border-gray-200 rounded-md m-2 overflow-auto flex flex-col justify-between">
+    <div className="w-[23%] h-[50vh] border border-gray-200 rounded-md m-2 overflow-auto flex flex-col justify-between">
       <div className="flex justify-center items-start w-full">
         <img
           src={image ? image : defaultImage}
