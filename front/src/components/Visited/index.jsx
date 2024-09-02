@@ -1,6 +1,6 @@
-import React from 'react';
-import Navbar from '../Navbar';
-import ItemPanel from './ItemPanel';
+import React from "react";
+import Navbar from "../Navbar";
+import ItemPanel from "./ItemPanel";
 
 const index = () => {
   return (

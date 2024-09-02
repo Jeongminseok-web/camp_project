@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import Item from './Item';
-import { fetchGetItemsData } from '../../redux/slices/apiSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import Item from "./Item";
+import { fetchGetItemsData } from "../../redux/slices/apiSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const ItemPanel = () => {
   const dispatch = useDispatch();
@@ -13,14 +13,15 @@ const ItemPanel = () => {
   useEffect(() => {
     if (googleId) {
       dispatch(fetchGetItemsData(googleId)).then((result) => {
-        setLocalAreas(result.payload);
-      }); // 컴포넌트가 마운트될 때 캠핑장 데이터를 가져옵니다.
+        setLocalAreas(result.payload); // 이미 서버에서 정렬된 데이터를 받음
+      });
+      // 컴포넌트가 마운트될 때 캠핑장 데이터를 가져옵니다.
     }
   }, [dispatch, googleId]);
 
   const handleItemRemove = (name) => {
     // 삭제된 항목을 필터링하여 상태 업데이트
-    const updatedAreas = areas.filter((area) => area.name !== name);
+    const updatedAreas = localAreas.filter((area) => area.name !== name);
     setLocalAreas(updatedAreas);
   };
 
@@ -30,10 +31,10 @@ const ItemPanel = () => {
   if (localAreas.length === 0) {
     return <div className="mt-12">방문한 캠핑장 정보가 없습니다.</div>; // 해당 사용자의 캠핑장이 없으면 메시지 표시
   }
+
   return (
-    <div className="w-full h-full flex mt-12">
-      {/* <p className="mt-12">???</p> */}
-      {areas.map((area) => (
+    <div className="w-full h-auto flex flex-wrap justify-normal mt-12">
+      {localAreas.map((area) => (
         <Item key={area.id} area={area} onRemove={handleItemRemove} />
       ))}
     </div>

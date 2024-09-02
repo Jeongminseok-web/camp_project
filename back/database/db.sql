@@ -11,7 +11,7 @@ VALUES ('1234', false, 'minseok')
 
 
 -- 데이터 조회
-SELECT * FROM spot WHERE iserId = 'minseok' ORDER BY created_at DESC(ASC);
+SELECT * FROM areas WHERE id = '$1' ORDER BY created_at DESC(ASC);
 
 -- 특정 사용자 데이터 필터 조회
 SELECT * FROM spot WHERE userId = 'minjeong'

@@ -10,19 +10,19 @@
 
 body {
   background: rgb(252, 252, 252);
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 .test2 {
-  font-family: 'Nerko One', cursive;
+  font-family: "Nerko One", cursive;
 }
 
-/* .page-section {
+.page-section {
   width: 100%;
   height: 100vh;
   margin: auto;
   display: flex;
-} */
+}
 
 .test::-webkit-scrollbar {
   height: 5px;

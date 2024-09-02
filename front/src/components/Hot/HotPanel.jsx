@@ -1,9 +1,9 @@
 // HotPanel.jsx
-import React, { useState, useEffect } from 'react';
-import { FaCrown } from 'react-icons/fa6';
-import Modal from '../items/Modal';
-import HotItem from './HotItem';
-import { BeatLoader } from 'react-spinners';
+import React, { useState, useEffect } from "react";
+import { FaCrown } from "react-icons/fa6";
+import Modal from "../items/Modal";
+import HotItem from "./HotItem";
+import { BeatLoader } from "react-spinners";
 
 const HotPanel = () => {
   const [hotData, setHotData] = useState([]);
@@ -21,10 +21,11 @@ const HotPanel = () => {
   useEffect(() => {
     const fetchHotData = async () => {
       const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json`;
+
       try {
         const response = await fetch(url);
         const text = await response.text(); // JSON 파싱 전에 텍스트로 응답을 읽음
-        console.log('Response text:', text); // 응답을 로그로 출력
+        console.log("Response text:", text); // 응답을 로그로 출력
 
         const data = JSON.parse(text);
 
@@ -44,11 +45,11 @@ const HotPanel = () => {
 
           setHotData(filteredAndSortedData);
         } else {
-          setError('API 응답 구조가 예상과 다릅니다.');
+          setError("API 응답 구조가 예상과 다릅니다.");
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('데이터를 가져오는 중 오류 발생');
+        console.error("Error fetching data:", error);
+        setError("데이터를 가져오는 중 오류 발생");
       }
     };
 
@@ -113,22 +114,22 @@ const HotPanel = () => {
           <p className="mb-5">주소: {modalContent.addr1}</p>
 
           <p className="mb-5">
-            전화번호: {modalContent.tel ? modalContent.tel : '정보 없음'}
+            전화번호: {modalContent.tel ? modalContent.tel : "정보 없음"}
           </p>
 
           <p className="mb-5">
-            부대 시설: {modalContent.sbrsCl ? modalContent.sbrsCl : '정보 없음'}
+            부대 시설: {modalContent.sbrsCl ? modalContent.sbrsCl : "정보 없음"}
           </p>
           <p className="mb-5">
-            주변 시설:{' '}
+            주변 시설:{" "}
             {modalContent.posblFcltyCl
               ? modalContent.posblFcltyCl
-              : '정보 없음'}
+              : "정보 없음"}
           </p>
           <p>{modalContent.intro}</p>
 
           <p className="mt-10">
-            홈페이지:{' '}
+            홈페이지:{" "}
             {modalContent.resveUrl ? (
               <a
                 href={modalContent.resveUrl}
@@ -139,7 +140,7 @@ const HotPanel = () => {
                 {modalContent.resveUrl}
               </a>
             ) : (
-              '정보 없음'
+              "정보 없음"
             )}
           </p>
         </Modal>
@@ -155,8 +156,8 @@ const HotPanel = () => {
                 onClick={() => setCurrentPage(number)}
                 className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
                   number === currentPage
-                    ? 'text-cyan-500 border border-cyan-300 bg-cyan-50'
-                    : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                    ? "text-cyan-500 border border-cyan-300 bg-cyan-50"
+                    : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 }`}
                 href="#"
               >

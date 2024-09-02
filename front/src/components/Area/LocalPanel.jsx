@@ -1,9 +1,9 @@
 // LocalPanel.jsx
-import React, { useState, useEffect } from 'react';
-import Modal from '../items/Modal';
-import LocalItem from './LocalItem';
-import LocalNav from './LocalNav';
-import MapPenel from '../MapPenel';
+import React, { useState, useEffect } from "react";
+import Modal from "../items/Modal";
+import LocalItem from "./LocalItem";
+import LocalNav from "./LocalNav";
+import MapPenel from "../MapPenel";
 
 const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
   const [campingData, setCampingData] = useState([]);
@@ -15,6 +15,7 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
 
   const fetchCampingData = async () => {
     const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json`;
+
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -26,10 +27,10 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
       ) {
         setCampingData(data.response.body.items.item);
       } else {
-        console.error('API 응답 구조가 예상과 다릅니다.');
+        console.error("API 응답 구조가 예상과 다릅니다.");
       }
     } catch (error) {
-      console.error('캠핑장 데이터를 불러오는 중 오류 발생:', error);
+      console.error("캠핑장 데이터를 불러오는 중 오류 발생:", error);
     }
   };
 
@@ -46,8 +47,8 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
     : [];
 
   useEffect(() => {
-    console.log('선택된 지역:', selectedRegion);
-    console.log('필터링된 데이터:', filteredCampingData);
+    // console.log("선택된 지역:", selectedRegion);
+    // console.log("필터링된 데이터:", filteredCampingData);
     setCurrentPage(1); // 새로운 지역이 선택될 때마다 페이지 번호를 초기화
   }, [selectedRegion, campingData]);
 
@@ -99,7 +100,7 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
 
       <div className="w-full h-full flex justify-center">
         <MapPenel center={center} zoom={zoom} />
-        <div className="w-full">
+        <div className="w-full h-full">
           {currentItems.length > 0 ? (
             <div className="grid grid-cols-3 gap-2 m-3">
               {currentItems.map((camping, index) => (
@@ -130,8 +131,8 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
                 href="#"
                 className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
                   currentPage === 1
-                    ? 'cursor-not-allowed text-gray-400'
-                    : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                    ? "cursor-not-allowed text-gray-400"
+                    : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 }`}
                 onClick={(e) => {
                   e.preventDefault();
@@ -163,8 +164,8 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
                   href="#"
                   className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
                     number === currentPage
-                      ? 'text-cyan-500 border border-cyan-300 bg-cyan-50'
-                      : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                      ? "text-cyan-500 border border-cyan-300 bg-cyan-50"
+                      : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -181,8 +182,8 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
                 href="#"
                 className={`flex items-center justify-center px-4 h-10 leading-tight border rounded-md ml-2 ${
                   currentPage === totalPages
-                    ? 'cursor-not-allowed text-gray-400'
-                    : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                    ? "cursor-not-allowed text-gray-400"
+                    : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 }`}
                 onClick={(e) => {
                   e.preventDefault();
@@ -220,22 +221,22 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
           <p className="mb-5">주소: {modalContent.addr1}</p>
 
           <p className="mb-5">
-            전화번호: {modalContent.tel ? modalContent.tel : '정보 없음'}
+            전화번호: {modalContent.tel ? modalContent.tel : "정보 없음"}
           </p>
 
           <p className="mb-5">
-            부대 시설: {modalContent.sbrsCl ? modalContent.sbrsCl : '정보 없음'}
+            부대 시설: {modalContent.sbrsCl ? modalContent.sbrsCl : "정보 없음"}
           </p>
           <p className="mb-5">
-            주변 시설:{' '}
+            주변 시설:{" "}
             {modalContent.posblFcltyCl
               ? modalContent.posblFcltyCl
-              : '정보 없음'}
+              : "정보 없음"}
           </p>
           <p>{modalContent.intro}</p>
 
           <p className="mt-10">
-            홈페이지:{' '}
+            홈페이지:{" "}
             {modalContent.resveUrl ? (
               <a
                 href={modalContent.resveUrl}
@@ -246,7 +247,7 @@ const LocalPanel = ({ selectedRegion, onRegionChange, center, zoom }) => {
                 {modalContent.resveUrl}
               </a>
             ) : (
-              '정보 없음'
+              "정보 없음"
             )}
           </p>
         </Modal>

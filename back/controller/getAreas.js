@@ -6,7 +6,7 @@ exports.getAreas = async (req, res) => {
 
   try {
     const result = await database.query(
-      "SELECT * FROM areas WHERE googleId = $1",
+      "SELECT * FROM areas WHERE googleId = $1 ORDER BY createdAt DESC",
       [googleId]
     );
     return res.status(200).json(result.rows);

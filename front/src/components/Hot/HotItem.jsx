@@ -15,7 +15,6 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 
 const HotItem = ({ item, index, indexOfFirstItem, openModal }) => {
-  const [hotData, setHotData] = useState([]);
   const [isAddMap, setIsAddMap] = useState({});
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.authData);

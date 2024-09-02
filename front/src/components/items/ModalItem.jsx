@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { IoIosArrowDropleft } from 'react-icons/io';
-import { IoIosArrowDropright } from 'react-icons/io';
-import { FaRegHeart } from 'react-icons/fa6';
-import { FaHeart } from 'react-icons/fa6';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import React, { useCallback, useEffect, useState } from "react";
+import { IoIosArrowDropleft } from "react-icons/io";
+import { IoIosArrowDropright } from "react-icons/io";
+import { FaRegCircle } from "react-icons/fa";
+import { FaCircle } from "react-icons/fa6";
+import { IoMdCloseCircle } from "react-icons/io";
+
+import { FaRegHeart } from "react-icons/fa6";
+import { FaHeart } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
   fetchDeleteItemData,
   fetchPostItemData,
-} from '../../redux/slices/apiSlice';
-import { BeatLoader } from 'react-spinners';
+} from "../../redux/slices/apiSlice";
+import { BeatLoader, DotLoader } from "react-spinners";
 
 const ModalItem = ({ selectedRegion, onClose, areas }) => {
   const [data, setData] = useState([]);
@@ -18,12 +22,31 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useDispatch();
   const [isAddMap, setIsAddMap] = useState({});
-  const defaultImage = process.env.PUBLIC_URL + '/campimg.png';
+  const defaultImage = process.env.PUBLIC_URL + "/campimg.png";
 
   const user = useSelector((state) => state.auth.authData);
   // console.log(user); // authData 전체 구조를 확인합니다.
   const googleId = user?.sub;
   // console.log(googleId); // googleId가 제대로 나오는지 확인합니다.
+
+  // 데이터 가져오는 함수
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "http://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json"
+      );
+      const result = await response.json();
+      setData(result.response.body.items.item);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
+
+  // 컴포넌트가 마운트될 때 실행되는 부분
+  useEffect(() => {
+    fetchData();
+    // 데이터 가져오는 함수 호출
+  }, [fetchData]);
 
   // areas 객체가 업데이트 될 때 isAdd 상태 업데이트
   useEffect(() => {
@@ -37,25 +60,6 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
       setCurrentIndex(0);
     }
   }, [areas]);
-
-  // 데이터 가져오는 함수
-  const fetchData = () => {
-    fetch(
-      `https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data.response.body.items.item);
-        // console.log("Full API response:", data);
-        // console.log("Fetched Data", data.response.body.items.item);
-      }) // 데이터를 가져와서 상태 업데이트
-      .catch((error) => console.error('Error fetching data:', error));
-  };
-
-  // 컴포넌트가 마운트될 때 실행되는 부분
-  useEffect(() => {
-    fetchData(); // 데이터 가져오는 함수 호출
-  }, []);
 
   // console.log(data);
   // const filteredData = data.filter(
@@ -80,7 +84,13 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
           }
         }
         const campings = randomIndices.map((index) => filteredData[index]);
-        setSelectedCampings(campings);
+        // 상태 업데이트 로직 추가
+        setSelectedCampings((prevCampings) => {
+          if (prevCampings.length === 0) {
+            return campings;
+          }
+          return prevCampings;
+        });
         setCurrentIndex(0);
       } else {
         setSelectedCampings([]);
@@ -112,30 +122,30 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
 
   const changeAdd = async () => {
     if (!currentCamping) {
-      console.error('캠핑장 정보가 없습니다.');
-      toast.error('캠핑장 정보가 없습니다.');
+      console.error("캠핑장 정보가 없습니다.");
+      toast.error("캠핑장 정보가 없습니다.");
       return;
     }
-    console.log('currentCamping:', currentCamping.facltNm); // 현재 캠핑장 정보 확인
-    console.log('currentCamping.id:', currentCamping.id); // ID 확인
+    console.log("currentCamping:", currentCamping.facltNm); // 현재 캠핑장 정보 확인
+    console.log("currentCamping.id:", currentCamping.id); // ID 확인
 
     if (isCurrentAdd) {
       // 채워진 하트 클릭 시 캠핑장 삭제
-      const confirm = window.confirm('캠핑장을 삭제하시겠습니까?');
+      const confirm = window.confirm("캠핑장을 삭제하시겠습니까?");
       if (!confirm) return;
 
       try {
-        console.log('캠핑장 삭제 시도');
+        console.log("캠핑장 삭제 시도");
         await dispatch(fetchDeleteItemData(currentCamping.facltNm)).unwrap();
         // await dispatch(fetchGetItemsData()).unwrap();
 
-        toast.success('캠핑장이 삭제되었습니다.');
+        toast.success("캠핑장이 삭제되었습니다.");
         setIsAddMap((prev) => ({
           ...prev,
           [currentCamping.facltNm]: false,
         }));
       } catch (error) {
-        toast.error('캠핑장 삭제에 실패했습니다.');
+        toast.error("캠핑장 삭제에 실패했습니다.");
         console.error(error);
       }
     } else {
@@ -143,41 +153,50 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
       const updateAddData = {
         name: currentCamping.facltNm,
         location: currentCamping.addr1,
-        image: currentCamping.firstImageUrl || 'No Image',
+        image: currentCamping.firstImageUrl || "No Image",
         isadd: true,
 
         googleId: user?.sub,
       };
 
       try {
-        console.log('캠핑장 추가 시도');
+        console.log("캠핑장 추가 시도");
         console.log(updateAddData);
         await dispatch(fetchPostItemData(updateAddData)).unwrap();
 
-        toast.success('캠핑장을 추가하였습니다.');
+        toast.success("캠핑장을 추가하였습니다.");
         setIsAddMap((prev) => ({
           ...prev,
           [currentCamping.facltNm]: true,
         }));
       } catch (error) {
-        toast.error('캠핑장 추가에 실패했습니다.');
-        console.error('Error updating data:', error);
+        toast.error("캠핑장 추가에 실패했습니다.");
+        console.error("Error updating data:", error);
       }
     }
   };
+
   // console.log("Areas:", areas);
   // console.log("Areas in Parent:", areas);
+  // console.log("Selected Campings Updated:", selectedCampings);
+
+  useEffect(() => {
+    console.log("Selected Campings Updated:", selectedCampings);
+  }, [selectedCampings]);
 
   return (
     <div
       // onClick={onClose}
       className="fixed w-full h-full left-0 top-0 bg-black bg-opacity-50 z-50"
     >
-      <div className="w-full h-full flex justify-center items-center">
+      <div className="w-full h-full flex justify-center items-center relative">
         <button onClick={handlePrevious}>
           <IoIosArrowDropleft className="text-6xl text-white" />
         </button>
-        <div className="border border-grey-200 rounded-lg bg-white w-[30%] h-[70vh] overflow-auto p-2 relative">
+        <div
+          className="border border-neutral-600 bg-white w-[30%] h-[70vh] overflow-auto p-2 relative
+        flex flex-col justify-between rounded-md"
+        >
           <div>
             {currentCamping ? (
               <div className="p-2">
@@ -193,9 +212,9 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
                   />
                   <button
                     onClick={onClose}
-                    className="p-2 bg-red-500 text-white w-20 h-10 border-none rounded-md"
+                    className="absolute top-2 right-2 text-2xl"
                   >
-                    닫기
+                    <IoMdCloseCircle />
                   </button>
                 </div>
                 <h2 className="text-3xl my-3">{currentCamping.facltNm}</h2>
@@ -203,22 +222,22 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
                   {currentCamping.addr1 ? (
                     <p className="">오시는길 : {currentCamping.addr1}</p>
                   ) : (
-                    ''
+                    ""
                   )}
                   {currentCamping.tel ? (
                     <p>전화번호 : {currentCamping.tel}</p>
                   ) : (
-                    ''
+                    ""
                   )}
                   {currentCamping.sbrsCl ? (
                     <p>편의 시설 : {currentCamping.sbrsCl}</p>
                   ) : (
-                    ''
+                    ""
                   )}
                   {currentCamping.featureNm ? (
                     <p>캠핑장 특징 : {currentCamping.featureNm}</p>
                   ) : (
-                    ''
+                    ""
                   )}
                 </div>
               </div>
@@ -228,18 +247,31 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
               </div>
             )}
           </div>
+          <div className="flex justify-between items-center mt-2">
+            <div></div>
+            <div className="flex gap-x-2">
+              {selectedCampings.map((_, index) => (
+                <div
+                  key={index}
+                  className={`cursor-pointer ${
+                    index === currentIndex ? "text-black" : "text-gray-500"
+                  }`}
+                >
+                  {index === currentIndex ? <FaCircle /> : <FaRegCircle />}
+                </div>
+              ))}
+            </div>
 
-          <button
-            className="absolute bottom-5 right-5 text-xl"
-            onClick={changeAdd}
-          >
-            {isCurrentAdd ? (
-              <FaHeart style={{ color: 'red' }} />
-            ) : (
-              <FaRegHeart style={{ color: 'red' }} />
-            )}
-          </button>
+            <button className="text-xl" onClick={changeAdd}>
+              {isCurrentAdd ? (
+                <FaHeart style={{ color: "red" }} />
+              ) : (
+                <FaRegHeart style={{ color: "red" }} />
+              )}
+            </button>
+          </div>
         </div>
+
         <button onClick={handleNext}>
           <IoIosArrowDropright className="text-6xl text-white" />
         </button>

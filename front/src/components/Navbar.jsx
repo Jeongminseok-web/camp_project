@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { GiCampingTent } from 'react-icons/gi';
-import { navMenus } from '../utils/data';
-import { Link } from 'react-router-dom';
-import { FcGoogle } from 'react-icons/fc';
-import { FaTree } from 'react-icons/fa6';
-import { useDispatch, useSelector } from 'react-redux';
-import { login, logout } from '../redux/slices/authSlice';
-import { jwtDecode } from 'jwt-decode';
+import React, { useCallback, useEffect, useState } from "react";
+import { GiCampingTent } from "react-icons/gi";
+import { navMenus } from "../utils/data";
+import { Link } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import { FaTree } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout } from "../redux/slices/authSlice";
+import { jwtDecode } from "jwt-decode";
 
 const Navbar = ({ menuIdx }) => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const Navbar = ({ menuIdx }) => {
   });
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('authData'));
+    const storedData = JSON.parse(localStorage.getItem("authData"));
     if (storedData) {
       dispatch(login({ authData: storedData }));
       setIsAuth(true);
@@ -36,7 +36,7 @@ const Navbar = ({ menuIdx }) => {
         callback: handleLoginSucess,
       });
     } else {
-      console.log('Google object is not available');
+      console.log("Google object is not available");
     }
   }, [googleClientId, handleLoginSucess]);
 
@@ -45,23 +45,23 @@ const Navbar = ({ menuIdx }) => {
   };
 
   const handleLogoutClick = () => {
-    localStorage.removeItem('authData');
+    localStorage.removeItem("authData");
     dispatch(logout());
     setIsAuth(false);
   };
 
   return (
-    <nav className="bg-white w-[10%] h-[100vh] flex flex-col justify-between border border-gray-200 px-2 overflow-hidden">
+    <nav className="bg-white w-[10%] h-[100%] flex flex-col justify-between border border-gray-200 px-2 overflow-hidden">
       <div className="menubar-wrapper flex justify-normal">
         <ul className="flex flex-col gap-y-3 text-md font-semibold mt-14">
           {navMenus.map((menu, idx) => (
             <li
               key={idx}
               className={`${
-                menu.idx === menuIdx ? 'bg-white' : ''
+                menu.idx === menuIdx ? "bg-white" : ""
               } px-5 py-2 bg-white
                hover:bg-cyan-100 rounded-md`}
-              style={{ minWidth: '160px' }}
+              style={{ minWidth: "160px" }}
             >
               <Link to={menu.to} className="flex gap-x-4 items-center">
                 {menu.icon}
@@ -72,15 +72,15 @@ const Navbar = ({ menuIdx }) => {
         </ul>
       </div>
 
-      <nav className="bg-white dark:bg-gray-900 fixed w-full h-[5%] z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-        <div className="header-wrapper flex gap-x-2 justify-normal items-center ml-5">
+      <nav className="bg-white dark:bg-gray-900 fixed w-full h-[6%] z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+        <div className="header-wrapper flex gap-x-2 items-center ml-5">
           <GiCampingTent className="w-10 h-10 mt-1 text-cyan-400" />
           <span
-            className="text-center text-xl font-bold bg-gradient-to-r
+            className="text-xl font-bold bg-gradient-to-r
          "
           >
             <Link
-              to={'/'}
+              to={"/"}
               className="test2 text-md text-cyan-400 drop-shadow-sm"
             >
               Camping Guide
