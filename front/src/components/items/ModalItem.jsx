@@ -194,7 +194,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
           <IoIosArrowDropleft className="text-6xl text-white" />
         </button>
         <div
-          className="border border-neutral-600 bg-white w-[30%] h-[70vh] overflow-auto p-2 relative
+          className="border border-gray-200 bg-white w-[30%] h-[70vh] overflow-auto p-2 relative
         flex flex-col justify-between rounded-md"
         >
           <div>

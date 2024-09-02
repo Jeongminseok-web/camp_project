@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const LocalNav = ({ onRegionChange }) => {
   const [regionData, setRegionData] = useState([]);
@@ -26,10 +26,10 @@ const LocalNav = ({ onRegionChange }) => {
 
           setRegionData(items);
         } else {
-          console.error('API 응답 구조가 예상과 다릅니다.');
+          console.error("API 응답 구조가 예상과 다릅니다.");
         }
       } catch (error) {
-        console.error('데이터를 가져오는 중 오류 발생:', error);
+        console.error("데이터를 가져오는 중 오류 발생:", error);
       }
     };
 
@@ -62,10 +62,10 @@ const LocalNav = ({ onRegionChange }) => {
   return (
     <div className="overflow-x-auto whitespace-nowrap py-2 mt-12 flex w-full">
       {doNmOptions.map((doNm, index) => (
-        <div key={index} className="mx-2">
+        <div key={index} className="mx-2 mt-4">
           <div>
             <select
-              value={selectedRegions[doNm] || ''}
+              value={selectedRegions[doNm] || ""}
               onChange={(e) => handleSigunguChange(doNm, e)}
               className="text-center w-40 inline-block"
             >
