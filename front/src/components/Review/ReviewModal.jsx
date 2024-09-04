@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 
 const ReviewModal = ({ closeModal, addReview }) => {
@@ -17,7 +16,8 @@ const ReviewModal = ({ closeModal, addReview }) => {
 
   const handleSubmit = () => {
     if (title && rating) {
-      addReview({ title, rating, date, content });
+      addReview({ title, rating, date, content, image }); // 이미지 추가
+      closeModal();
     } else {
       alert('제목과 별점은 필수 항목입니다.');
     }
@@ -113,14 +113,6 @@ const ReviewModal = ({ closeModal, addReview }) => {
       </div>
     </div>
   );
-=======
-import React from "react";
-import { useSelector } from "react-redux";
-
-const ReviewModal = () => {
-  const { modalItemType } = useSelector((state) => state.modalItem);
-  return <div></div>;
->>>>>>> dbdb4e212f8cc31053d66345e24ce15942ec346e
 };
 
 export default ReviewModal;

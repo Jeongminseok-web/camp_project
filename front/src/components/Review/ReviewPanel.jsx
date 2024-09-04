@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from 'react';
 
 const ReviewPanel = ({ reviews }) => {
@@ -13,18 +12,18 @@ const ReviewPanel = ({ reviews }) => {
             <p>별점: {'★'.repeat(review.rating)}</p>
             <p>날짜: {review.date}</p>
             <p>{review.content}</p>
+            {review.image && (
+              <div className="mt-4">
+                <img
+                  src={review.image}
+                  alt="리뷰 이미지"
+                  className="w-full h-auto rounded"
+                />
+              </div>
+            )}
           </div>
         ))
       )}
-=======
-import React from "react";
-import ReviewModal from "./ReviewModal";
-
-const ReviewPanel = () => {
-  return (
-    <div>
-      <ReviewModal />
->>>>>>> dbdb4e212f8cc31053d66345e24ce15942ec346e
     </div>
   );
 };
