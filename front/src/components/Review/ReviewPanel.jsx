@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 
 const ReviewPanel = ({ reviews }) => {
@@ -15,6 +16,15 @@ const ReviewPanel = ({ reviews }) => {
           </div>
         ))
       )}
+=======
+import React from "react";
+import ReviewModal from "./ReviewModal";
+
+const ReviewPanel = () => {
+  return (
+    <div>
+      <ReviewModal />
+>>>>>>> dbdb4e212f8cc31053d66345e24ce15942ec346e
     </div>
   );
 };

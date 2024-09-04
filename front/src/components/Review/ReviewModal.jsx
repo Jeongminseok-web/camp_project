@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 
 const ReviewModal = ({ closeModal, addReview }) => {
@@ -112,6 +113,14 @@ const ReviewModal = ({ closeModal, addReview }) => {
       </div>
     </div>
   );
+=======
+import React from "react";
+import { useSelector } from "react-redux";
+
+const ReviewModal = () => {
+  const { modalItemType } = useSelector((state) => state.modalItem);
+  return <div></div>;
+>>>>>>> dbdb4e212f8cc31053d66345e24ce15942ec346e
 };
 
 export default ReviewModal;
