@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 function Users() {
   // 상태 초기화
@@ -12,13 +12,18 @@ function Users() {
   // 데이터 가져오는 함수
   const fetchData = () => {
     fetch(
-      'https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json'
+      "https://apis.data.go.kr/B551011/GoCamping/basedList?numOfRows=4000&MobileOS=ETC&MobileApp=camp&serviceKey=3tarJeicxWx1WR%2FDbmAPR9PexoyQb0fzEGJUC1BBu%2BTkihK1IJo1XOTJdVEwqPDSV99EGGyK3WUtzrGl57pJZw%3D%3D&_type=json"
     )
       .then((response) => response.json())
       .then((data) => setData(data.response.body.items.item)) // 데이터를 가져와서 상태 업데이트
-      .catch((error) => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching data:", error));
   };
-  console.log(data);
+
+  // 컴포넌트가 마운트될 때 실행되는 부분
+  useEffect(() => {
+    fetchData();
+    // 데이터 가져오는 함수 호출
+  }, []);
 
   return (
     <div>

@@ -3,7 +3,10 @@ import {
   GET_AREAS_API_URL,
   POST_AREAS_API_URL,
   DELETE_AREAS_API_URL,
-  UPDATE_ADD_AREAS_URL,
+  UPDATE_COMPLETED_TASKS_URL,
+  GET_TASKS_API_URL,
+  POST_TASKS_API_URL,
+  UPDATE_TASK_API_URL,
 } from "../../utils/apiUrl";
 import {
   deleteRequest,
@@ -46,16 +49,19 @@ const deleteItemFetchThunk = (actionType, apiURL) => {
   });
 };
 
-const updateAddFetchThunk = (actionType, apiURL) => {
-  return createAsyncThunk(actionType, async (data) => {
+const updateTaskFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (updateData) => {
     // console.log(options);
     const options = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: JSON.stringify(updateData),
     };
+    return await patchRequest(apiURL, options);
+  });
+};
+
+const updateCompletedFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (options) => {
+    // console.log(options);
     return await patchRequest(apiURL, options);
   });
 };
@@ -65,9 +71,19 @@ export const fetchGetItemsData = getItemsFetchThunk(
   GET_AREAS_API_URL
 );
 
+export const fetchGetTasksData = getItemsFetchThunk(
+  "fetchGetTasks",
+  GET_TASKS_API_URL
+);
+
 export const fetchPostItemData = postItemFetchThunk(
   "fetchPostItem",
   POST_AREAS_API_URL
+);
+
+export const fetchPostTaskData = postItemFetchThunk(
+  "fetchPostTask",
+  POST_TASKS_API_URL
 );
 
 export const fetchDeleteItemData = deleteItemFetchThunk(
@@ -75,9 +91,19 @@ export const fetchDeleteItemData = deleteItemFetchThunk(
   DELETE_AREAS_API_URL
 );
 
-export const fetchUpdateAddData = updateAddFetchThunk(
+export const fetchDeleteTaskData = deleteItemFetchThunk(
+  "fetchDeleteTask",
+  DELETE_AREAS_API_URL
+);
+
+export const fetchPutTaskData = updateTaskFetchThunk(
+  "fetchPutTask",
+  UPDATE_TASK_API_URL
+);
+
+export const fetchUpdateCompletedData = updateCompletedFetchThunk(
   "fetchUpdateCompleted",
-  UPDATE_ADD_AREAS_URL
+  UPDATE_COMPLETED_TASKS_URL
 );
 
 const handleFullfilled = (stateKey) => (state, action) => {
@@ -95,11 +121,16 @@ const apiSlice = createSlice({
     getItemData: [],
     postItemData: null,
     deleteItemData: null,
-    updateAddData: null,
+    getTasksData: null,
+    postTaskData: null,
+    deleteTaskData: null,
+    updateCompletedData: null,
+    updatePutData: null,
     isError: false,
   },
   extraReducers: (builder) => {
     builder
+      // 캠핑장 apiSlice
       .addCase(fetchGetItemsData.fulfilled, handleFullfilled("getItemsData"))
       .addCase(fetchGetItemsData.rejected, handleRejected)
       .addCase(fetchPostItemData.fulfilled, handleFullfilled("postItemData"))
@@ -109,8 +140,23 @@ const apiSlice = createSlice({
         handleFullfilled("deleteItemData")
       )
       .addCase(fetchDeleteItemData.rejected, handleRejected)
-      .addCase(fetchUpdateAddData.fulfilled, handleFullfilled("updateAddData"))
-      .addCase(fetchUpdateAddData.rejected, handleRejected);
+      //  리뷰 apiSlice
+      .addCase(fetchGetTasksData.fulfilled, handleFullfilled("getTasksData"))
+      .addCase(fetchGetTasksData.rejected, handleRejected)
+      .addCase(fetchPostTaskData.fulfilled, handleFullfilled("postTaskData"))
+      .addCase(fetchPostTaskData.rejected, handleRejected)
+      .addCase(
+        fetchDeleteTaskData.fulfilled,
+        handleFullfilled("deleteTaskData")
+      )
+      .addCase(fetchDeleteTaskData.rejected, handleRejected)
+      .addCase(
+        fetchUpdateCompletedData.fulfilled,
+        handleFullfilled("updateCompletedData")
+      )
+      .addCase(fetchUpdateCompletedData.rejected, handleRejected)
+      .addCase(fetchPutTaskData.fulfilled, handleFullfilled("updatePutData"))
+      .addCase(fetchPutTaskData.rejected, handleRejected);
   },
 });
 

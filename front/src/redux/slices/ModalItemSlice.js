@@ -4,7 +4,7 @@ const modalItemSlice = createSlice({
   name: "modalItem",
   initialState: {
     isOpen: false,
-    modalItemType: "",
+    modalItemType: "create",
     task: null,
   },
   reducers: {

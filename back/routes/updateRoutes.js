@@ -1,6 +1,7 @@
 const router = require("express").Router();
-const { updateArea } = require("../controller/updateArea");
+const { updateTask, updateCompletedTask } = require("../controller/updateTask");
 
-router.patch("/update_area", updateArea);
+router.patch("/update_completed_task", updateCompletedTask);
+router.put("/update_task", updateTask);
 
 module.exports = router;

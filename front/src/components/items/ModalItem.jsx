@@ -41,6 +41,7 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
       console.error("Error fetching data:", error);
     }
   }, []);
+  // console.log(data);
 
   // 컴포넌트가 마운트될 때 실행되는 부분
   useEffect(() => {
@@ -155,7 +156,6 @@ const ModalItem = ({ selectedRegion, onClose, areas }) => {
         location: currentCamping.addr1,
         image: currentCamping.firstImageUrl || "No Image",
         isadd: true,
-
         googleId: user?.sub,
       };
 

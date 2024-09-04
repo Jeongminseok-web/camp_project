@@ -51,7 +51,7 @@ const Navbar = ({ menuIdx }) => {
   };
 
   return (
-    <nav className="bg-white w-[10%] h-[100%] flex flex-col justify-between border border-gray-200 px-2 overflow-hidden">
+    <nav className="bg-white xl:w-[10%] md:w-[20%] w-full h-[100%] flex flex-col justify-between border border-gray-200 px-2 overflow-hidden">
       <div className="menubar-wrapper flex justify-normal">
         <ul className="flex flex-col gap-y-3 text-md font-semibold mt-14">
           {navMenus.map((menu, idx) => (
@@ -72,7 +72,7 @@ const Navbar = ({ menuIdx }) => {
         </ul>
       </div>
 
-      <nav className="bg-white dark:bg-gray-900 fixed w-full h-[6%] z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+      <nav className="bg-white dark:bg-gray-900 fixed w-full h-[50px] z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
         <div className="header-wrapper flex gap-x-2 items-center ml-5">
           <GiCampingTent className="w-10 h-10 mt-1 text-cyan-400" />
           <span

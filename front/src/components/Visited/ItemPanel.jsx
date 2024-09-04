@@ -26,10 +26,18 @@ const ItemPanel = () => {
   };
 
   if (!googleId) {
-    return <div className="mt-12">로그인이 필요한 서비스 입니다.</div>; // 데이터가 로드되지 않은 경우 로딩 메시지를 표시합니다.
+    return (
+      <div className="w-full h-full justify-center items-center flex text-3xl">
+        로그인이 필요한 서비스 입니다.
+      </div>
+    ); // 데이터가 로드되지 않은 경우 로딩 메시지를 표시합니다.
   }
   if (localAreas.length === 0) {
-    return <div className="mt-12">방문한 캠핑장 정보가 없습니다.</div>; // 해당 사용자의 캠핑장이 없으면 메시지 표시
+    return (
+      <div className="w-full h-full justify-center items-center flex text-3xl">
+        방문한 캠핑장 정보가 없습니다.
+      </div>
+    ); // 해당 사용자의 캠핑장이 없으면 메시지 표시
   }
 
   return (

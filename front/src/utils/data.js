@@ -3,6 +3,7 @@ import { GiSouthKorea } from "react-icons/gi";
 import { FaHotjar } from "react-icons/fa";
 import { TbCategoryFilled } from "react-icons/tb";
 import { RiDoorOpenFill } from "react-icons/ri";
+import { TbStarsFilled } from "react-icons/tb";
 
 export const navMenus = [
   { label: "Home", to: "/", icon: <IoHomeSharp className="w-5 h-5" />, idx: 0 },
@@ -23,6 +24,12 @@ export const navMenus = [
     label: "Visited",
     to: "/visited",
     icon: <RiDoorOpenFill className="w-5 h-5" />,
+    idx: 4,
+  },
+  {
+    label: "Review",
+    to: "/review",
+    icon: <TbStarsFilled className="w-5 h-5" />,
     idx: 4,
   },
 ];
