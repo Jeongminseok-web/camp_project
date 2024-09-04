@@ -23,6 +23,14 @@ const getItemsFetchThunk = (actionType, apiURL) => {
   });
 };
 
+const getTasksFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (userId) => {
+    // console.log(apiURL, userId);
+    const fullPath = `${apiURL}/${userId}`;
+    return await getRequest(fullPath);
+  });
+};
+
 const postItemFetchThunk = (actionType, apiURL) => {
   return createAsyncThunk(actionType, async (postData) => {
     // console.log(postData);
@@ -37,7 +45,33 @@ const postItemFetchThunk = (actionType, apiURL) => {
   });
 };
 
+const postTaskFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (postData) => {
+    // console.log(postData);
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData), // 표준 json 문자열로 변환
+    };
+    return await postRequest(apiURL, options);
+  });
+};
+
 const deleteItemFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (id) => {
+    // console.log(postData);
+    const options = {
+      method: "DELETE",
+    };
+    const fullPath = `${apiURL}/${id}`;
+    await deleteRequest(fullPath, options);
+    return id;
+  });
+};
+
+const deleteTaskFetchThunk = (actionType, apiURL) => {
   return createAsyncThunk(actionType, async (id) => {
     // console.log(postData);
     const options = {
@@ -71,7 +105,7 @@ export const fetchGetItemsData = getItemsFetchThunk(
   GET_AREAS_API_URL
 );
 
-export const fetchGetTasksData = getItemsFetchThunk(
+export const fetchGetTasksData = getTasksFetchThunk(
   "fetchGetTasks",
   GET_TASKS_API_URL
 );
@@ -81,7 +115,7 @@ export const fetchPostItemData = postItemFetchThunk(
   POST_AREAS_API_URL
 );
 
-export const fetchPostTaskData = postItemFetchThunk(
+export const fetchPostTaskData = postTaskFetchThunk(
   "fetchPostTask",
   POST_TASKS_API_URL
 );
@@ -91,7 +125,7 @@ export const fetchDeleteItemData = deleteItemFetchThunk(
   DELETE_AREAS_API_URL
 );
 
-export const fetchDeleteTaskData = deleteItemFetchThunk(
+export const fetchDeleteTaskData = deleteTaskFetchThunk(
   "fetchDeleteTask",
   DELETE_AREAS_API_URL
 );
@@ -121,7 +155,7 @@ const apiSlice = createSlice({
     getItemData: [],
     postItemData: null,
     deleteItemData: null,
-    getTasksData: null,
+    getTaskData: null,
     postTaskData: null,
     deleteTaskData: null,
     updateCompletedData: null,
