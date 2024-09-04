@@ -1,7 +1,12 @@
 import React from "react";
+import ReviewModal from "./ReviewModal";
 
 const ReviewPanel = () => {
-  return <div></div>;
+  return (
+    <div>
+      <ReviewModal />
+    </div>
+  );
 };
 
 export default ReviewPanel;
