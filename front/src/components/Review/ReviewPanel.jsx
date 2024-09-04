@@ -3,19 +3,28 @@ import ReviewItem from "./ReviewItem";
 import ReviewModal from "./ReviewModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGetTasksData } from "../../redux/slices/apiSlice";
+import { toast } from "react-toastify";
 
 const ReviewPanel = () => {
-  const task = useSelector((state) => state.api.getTasksData);
-  console.log(task);
+  const tasks = useSelector((state) => state.api.getTasksData);
+  // console.log(tasks);
   const authData = useSelector((state) => state.auth.authData);
   // console.log(authData);
   const dispatch = useDispatch();
   const userKey = useSelector((state) => authData?.sub);
+  // console.log(userKey);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reviews, setReviews] = useState([]); // 리뷰 목록을 관리
   const [localTasks, setLocalTasks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = () => {
+    if (userKey) {
+      setIsModalOpen(true);
+    } else {
+      toast.error("로그인이 필요합니다."); // Show error toast
+    }
+  };
   const closeModal = () => setIsModalOpen(false);
 
   const addReview = (newReview) => {
@@ -24,13 +33,11 @@ const ReviewPanel = () => {
   };
 
   useEffect(() => {
-    if (userKey) {
-      dispatch(fetchGetTasksData(userKey)).then((result) => {
-        setLocalTasks(result.payload); // 이미 서버에서 정렬된 데이터를 받음
-      });
-      // 컴포넌트가 마운트될 때 캠핑장 데이터를 가져옵니다.
-    }
-  }, [dispatch, userKey]);
+    dispatch(fetchGetTasksData()).then((result) => {
+      setLocalTasks(result.payload); // 이미 서버에서 정렬된 데이터를 받음
+    });
+    // 컴포넌트가 마운트될 때 캠핑장 데이터를 가져옵니다.
+  }, [dispatch]);
 
   return (
     <div className="w-full h-full">

@@ -1,20 +1,45 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux'; // useSelector를 Redux에서 가져옴
+import React, { useState } from "react";
+import { useSelector } from "react-redux"; // useSelector를 Redux에서 가져옴
 
 const ReviewModal = ({ closeModal, addReview }) => {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [grade, setGrade] = useState(0);
-  const [date, setDate] = useState('');
-  const [description, setDescription] = useState(''); // content -> description으로 변경
+  const [date, setDate] = useState("");
+  const [description, setDescription] = useState(""); // content -> description으로 변경
   const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
+  const [featuredImage, setFeaturedImage] = useState(null);
 
   // Redux에서 googleId를 가져옴 (사용자 로그인 정보)
   const googleId = useSelector((state) => state.auth.authData?.sub);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file)); // 이미지 미리보기
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files);
+
+    if (files.length + images.length > 10) {
+      alert("최대 10장까지 업로드할 수 있습니다.");
+      return;
+    }
+
+    const newImages = files.map((file) => URL.createObjectURL(file));
+    setImages((prevImages) => [...prevImages, ...newImages]);
+
+    // 첫 번째 이미지를 기본 대표 사진으로 설정
+    if (files.length > 0 && !featuredImage) {
+      setFeaturedImage(URL.createObjectURL(files[0]));
+    }
+  };
+
+  const handleFeaturedImageChange = (image) => {
+    setFeaturedImage(image);
+  };
+
+  const handleRemoveImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+
+    // 대표 사진이 삭제된 경우, 목록의 첫 번째 이미지를 대표 사진으로 설정
+    if (images[index] === featuredImage) {
+      setFeaturedImage(images[0] || null);
     }
   };
 
@@ -27,36 +52,36 @@ const ReviewModal = ({ closeModal, addReview }) => {
         title,
         grade: grade || 0,
         date,
-        description: description || '', // 기본값으로 빈 문자열 설정
+        description: description || "", // 기본값으로 빈 문자열 설정
         image,
         userId: googleId, // 구글 ID를 userId로 전송
       };
 
-      console.log('Sending Data:', newReview);
+      console.log("Sending Data:", newReview);
 
       // API 호출로 백엔드에 데이터 전송
       try {
-        const response = await fetch('http://localhost:8000/post_tasks', {
-          method: 'POST',
+        const response = await fetch("http://localhost:8000/post_tasks", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(newReview),
         });
 
         const result = await response.json();
         if (response.ok) {
-          console.log('Review successfully submitted:', result);
+          console.log("Review successfully submitted:", result);
           addReview(newReview); // 리뷰를 로컬 상태에 추가 (옵션)
           closeModal();
         } else {
-          console.error('Failed to submit review:', result.error);
+          console.error("Failed to submit review:", result.error);
         }
       } catch (error) {
-        console.error('Error while submitting review:', error);
+        console.error("Error while submitting review:", error);
       }
     } else {
-      alert('제목과 별점, 구글 ID는 필수 항목입니다.');
+      alert("제목과 별점, 구글 ID는 필수 항목입니다.");
     }
   };
 
@@ -83,8 +108,8 @@ const ReviewModal = ({ closeModal, addReview }) => {
                   key={star}
                   onClick={() => setGrade(star)}
                   style={{
-                    cursor: 'pointer',
-                    color: star <= grade ? 'gold' : 'gray',
+                    cursor: "pointer",
+                    color: star <= grade ? "gold" : "gray",
                   }}
                   className="text-2xl"
                 >
@@ -121,17 +146,50 @@ const ReviewModal = ({ closeModal, addReview }) => {
               accept="image/*"
               onChange={handleImageChange}
               className="w-full p-2 border rounded mt-1"
+              multiple
             />
-            {image && (
-              <div className="mt-4">
+          </label>
+
+          <div className="mb-4">
+            {featuredImage && (
+              <div className="relative w-32 h-32 mb-4">
                 <img
-                  src={image}
-                  alt="미리보기"
-                  className="w-full h-auto rounded"
+                  src={featuredImage}
+                  alt="대표 사진"
+                  className="w-full h-full object-cover rounded"
                 />
+                <div className="absolute top-0 right-0 bg-blue-500 text-white p-1 rounded-full">
+                  대표 사진
+                </div>
               </div>
             )}
-          </label>
+          </div>
+
+          <div className="flex flex-wrap gap-4 mt-4">
+            {images.map((image, index) => (
+              <div key={index} className="relative w-32 h-32">
+                <img
+                  src={image}
+                  alt={`미리보기 ${index}`}
+                  className="w-full h-full object-cover rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="absolute top-0 right-0 bg-black text-white p-1 rounded-full"
+                >
+                  X
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFeaturedImageChange(image)}
+                  className="absolute bottom-0 left-0 bg-green-500 text-white p-1 rounded-full"
+                >
+                  대표 사진
+                </button>
+              </div>
+            ))}
+          </div>
 
           <div className="flex justify-end">
             <button
