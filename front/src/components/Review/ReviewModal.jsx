@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux'; // useSelector를 Redux에서 가져옴
 
 const ReviewModal = ({ closeModal, addReview }) => {
-  const [title, setTitle] = useState("");
-  const [rating, setRating] = useState(0);
-  const [date, setDate] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState('');
+  const [grade, setGrade] = useState(0);
+  const [date, setDate] = useState('');
+  const [description, setDescription] = useState(''); // content -> description으로 변경
   const [image, setImage] = useState(null);
+
+  // Redux에서 googleId를 가져옴 (사용자 로그인 정보)
+  const googleId = useSelector((state) => state.auth.authData?.sub);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -14,12 +18,45 @@ const ReviewModal = ({ closeModal, addReview }) => {
     }
   };
 
-  const handleSubmit = () => {
-    if (title && rating) {
-      addReview({ title, rating, date, content, image }); // 이미지 추가
-      closeModal();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (title && grade && googleId) {
+      // googleId가 있는지 체크
+      const newReview = {
+        title,
+        grade: grade || 0,
+        date,
+        description: description || '', // 기본값으로 빈 문자열 설정
+        image,
+        userId: googleId, // 구글 ID를 userId로 전송
+      };
+
+      console.log('Sending Data:', newReview);
+
+      // API 호출로 백엔드에 데이터 전송
+      try {
+        const response = await fetch('http://localhost:8000/post_tasks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newReview),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          console.log('Review successfully submitted:', result);
+          addReview(newReview); // 리뷰를 로컬 상태에 추가 (옵션)
+          closeModal();
+        } else {
+          console.error('Failed to submit review:', result.error);
+        }
+      } catch (error) {
+        console.error('Error while submitting review:', error);
+      }
     } else {
-      alert("제목과 별점은 필수 항목입니다.");
+      alert('제목과 별점, 구글 ID는 필수 항목입니다.');
     }
   };
 
@@ -44,10 +81,10 @@ const ReviewModal = ({ closeModal, addReview }) => {
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
                   key={star}
-                  onClick={() => setRating(star)}
+                  onClick={() => setGrade(star)}
                   style={{
-                    cursor: "pointer",
-                    color: star <= rating ? "gold" : "gray",
+                    cursor: 'pointer',
+                    color: star <= grade ? 'gold' : 'gray',
                   }}
                   className="text-2xl"
                 >
@@ -70,8 +107,8 @@ const ReviewModal = ({ closeModal, addReview }) => {
           <label className="block mb-4">
             후기:
             <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              value={description} // content -> description
+              onChange={(e) => setDescription(e.target.value)} // content -> description
               className="w-full p-2 border rounded mt-1"
               rows="4"
             />

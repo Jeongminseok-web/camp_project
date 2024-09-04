@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import ReviewPanel from "./ReviewPanel";
-import ReviewModal from "./ReviewModal"; // 리뷰 작성 모달 컴포넌트
-import Navbar from "../Navbar";
+import React, { useState } from 'react';
+import ReviewPanel from './ReviewPanel';
+import Navbar from '../Navbar';
 
 const Index = () => {
   return (
