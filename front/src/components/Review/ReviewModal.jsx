@@ -1,31 +1,62 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux'; // useSelector를 Redux에서 가져옴
 import { IoMdCloseCircle } from 'react-icons/io'; // 닫기 아이콘
+=======
+import React, { useState } from "react";
+import { useSelector } from "react-redux"; // useSelector를 Redux에서 가져옴
+import { IoMdCloseCircle } from "react-icons/io"; // 닫기 아이콘
+>>>>>>> d2a0ff0 (commit)
 
 const ReviewModal = ({ closeModal, addReview }) => {
   const [title, setTitle] = useState('');
   const [grade, setGrade] = useState(0);
+<<<<<<< HEAD
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState([]);
   const [featuredImage, setFeaturedImage] = useState(null);
 
+=======
+  const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [images, setImages] = useState([]);
+  const [featuredImage, setFeaturedImage] = useState(null);
+  const [realimage, setRealImage] = useState("");
+>>>>>>> d2a0ff0 (commit)
   const googleId = useSelector((state) => state.auth.authData?.sub);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
+<<<<<<< HEAD
 
     if (files.length + images.length > 5) {
       alert('최대 5장까지 업로드할 수 있습니다.');
+=======
+    console.log(files);
+    const imagefile = event.target.files;
+    const imagePaths = files.map((file) => file);
+    console.log(imagePaths);
+    setRealImage(imagefile);
+    if (files.length + images.length > 5) {
+      alert("최대 5장까지 업로드할 수 있습니다.");
+>>>>>>> d2a0ff0 (commit)
       return;
     }
 
-    const newImages = files.map((file) => URL.createObjectURL(file));
-    setImages((prevImages) => [...prevImages, ...newImages]);
+    // const newImages = files.map((file) => URL.createObjectURL(file));
+    setImages((prevImages) => [...prevImages, ...imagePaths]);
+
+    console.log(images);
 
     // 첫 번째 이미지를 기본 대표 사진으로 설정
+<<<<<<< HEAD
     if (!featuredImage && newImages.length > 0) {
       setFeaturedImage(newImages[0]);
+=======
+    if (!featuredImage && imagePaths.length > 0) {
+      setFeaturedImage(imagePaths[0]);
+>>>>>>> d2a0ff0 (commit)
     }
   };
 
@@ -48,8 +79,10 @@ const ReviewModal = ({ closeModal, addReview }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(images);
 
     if (title && grade && googleId) {
+<<<<<<< HEAD
       const newReview = {
         title,
         grade,
@@ -69,12 +102,49 @@ const ReviewModal = ({ closeModal, addReview }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(newReview),
+=======
+      const formData = new FormData();
+      console.log(title, grade, googleId);
+      formData.append("title", title);
+      formData.append("grade", grade);
+      formData.append("date", date);
+      formData.append("description", description);
+      formData.append("userId", googleId);
+      formData.append("featuredImage", featuredImage);
+      formData.append("images", realimage);
+      // images.forEach((file) => {
+      //   formData.append("images", file);
+      // });
+      // console.log(formData);
+      try {
+        for (let key of formData.keys()) {
+          console.log(key, ":", formData.get(key));
+        }
+        const response = await fetch("http://localhost:8000/post_tasks", {
+          method: "POST",
+          body: formData,
+>>>>>>> d2a0ff0 (commit)
         });
+
+        // console.log(formData);
 
         const result = await response.json();
         if (response.ok) {
+<<<<<<< HEAD
           console.log('Review successfully submitted:', result);
           addReview(newReview);
+=======
+          console.log("Review successfully submitted:", result);
+          addReview({
+            title,
+            grade,
+            date,
+            description,
+            images, // 서버에서 처리된 이미지 URL을 받아야 합니다.
+            featuredImage,
+            userId: googleId,
+          });
+>>>>>>> d2a0ff0 (commit)
           closeModal();
         } else {
           console.error('Failed to submit review:', result.error);
@@ -91,7 +161,11 @@ const ReviewModal = ({ closeModal, addReview }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full max-h-[90vh] overflow-auto">
         <h2 className="text-2xl font-semibold mb-4">리뷰 작성</h2>
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+          method="post"
+        >
           <label className="block mb-2">
             방문한 캠핑장 이름 (필수):
             <input
@@ -146,6 +220,7 @@ const ReviewModal = ({ closeModal, addReview }) => {
             <input
               type="file"
               accept="image/*"
+              name="images"
               onChange={handleImageChange}
               className="w-full p-2 border rounded mt-1"
               multiple
@@ -186,10 +261,17 @@ const ReviewModal = ({ closeModal, addReview }) => {
                   type="button"
                   onClick={() => handleFeaturedImageChange(image)}
                   className={`absolute bottom-0 left-0 ${
+<<<<<<< HEAD
                     image === featuredImage ? 'bg-cyan-500' : 'bg-cyan-200'
                   } text-black p-1 rounded-full`}
                 >
                   {image === featuredImage ? '대표 사진' : '대표로 설정'}
+=======
+                    image === featuredImage ? "bg-cyan-500" : "bg-cyan-200"
+                  } text-black p-1 rounded-full`}
+                >
+                  {image === featuredImage ? "대표 사진" : "대표로 설정"}
+>>>>>>> d2a0ff0 (commit)
                 </button>
               </div>
             ))}

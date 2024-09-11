@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { IoMdCloseCircle } from 'react-icons/io';
+import React, { useState } from "react";
+import { IoMdCloseCircle } from "react-icons/io";
 
 const ReviewItem = ({ task }) => {
-  const { image, title, description, date, grade } = task;
+  const { image1, image2, image3, title, description, date, grade } = task;
   const [isReviewOpen, setisReviewOpen] = useState(false);
 
-  const defaultImage = process.env.PUBLIC_URL + '/campimg.png';
+  const defaultImage = process.env.PUBLIC_URL + "/campimg.png";
 
   // 모달 열기/닫기 함수
   const openReview = () => setisReviewOpen(true);
@@ -20,7 +20,7 @@ const ReviewItem = ({ task }) => {
       >
         {/* 이미지 */}
         <img
-          src={image || defaultImage}
+          src={image1 || defaultImage}
           alt={title}
           className="w-full h-full object-cover"
           onError={(e) => {
@@ -55,10 +55,10 @@ const ReviewItem = ({ task }) => {
             <p className="mb-2">방문한 날짜: {date}</p>
             <p className="mb-4">후기: {description}</p>
 
-            {image && (
+            {image1 && (
               <div className="mb-4 flex justify-center">
                 <img
-                  src={image || defaultImage}
+                  src={image1 || defaultImage}
                   alt={title}
                   className="w-auto h-auto object-contain rounded-lg"
                   onError={(e) => {

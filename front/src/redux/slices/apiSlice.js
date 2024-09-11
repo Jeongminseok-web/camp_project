@@ -155,7 +155,7 @@ const apiSlice = createSlice({
     getItemData: [],
     postItemData: null,
     deleteItemData: null,
-    getTaskData: [],
+    getTasksData: [],
     postTasksData: null,
     deleteTaskData: null,
     updateCompletedData: null,
