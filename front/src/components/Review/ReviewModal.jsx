@@ -1,38 +1,22 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux'; // useSelector를 Redux에서 가져옴
-import { IoMdCloseCircle } from 'react-icons/io'; // 닫기 아이콘
-=======
 import React, { useState } from "react";
 import { useSelector } from "react-redux"; // useSelector를 Redux에서 가져옴
 import { IoMdCloseCircle } from "react-icons/io"; // 닫기 아이콘
->>>>>>> d2a0ff0 (commit)
 
 const ReviewModal = ({ closeModal, addReview }) => {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [grade, setGrade] = useState(0);
-<<<<<<< HEAD
-  const [date, setDate] = useState('');
-  const [description, setDescription] = useState('');
-  const [images, setImages] = useState([]);
-  const [featuredImage, setFeaturedImage] = useState(null);
 
-=======
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [featuredImage, setFeaturedImage] = useState(null);
   const [realimage, setRealImage] = useState("");
->>>>>>> d2a0ff0 (commit)
+
   const googleId = useSelector((state) => state.auth.authData?.sub);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
-<<<<<<< HEAD
 
-    if (files.length + images.length > 5) {
-      alert('최대 5장까지 업로드할 수 있습니다.');
-=======
     console.log(files);
     const imagefile = event.target.files;
     const imagePaths = files.map((file) => file);
@@ -40,7 +24,7 @@ const ReviewModal = ({ closeModal, addReview }) => {
     setRealImage(imagefile);
     if (files.length + images.length > 5) {
       alert("최대 5장까지 업로드할 수 있습니다.");
->>>>>>> d2a0ff0 (commit)
+
       return;
     }
 
@@ -50,13 +34,9 @@ const ReviewModal = ({ closeModal, addReview }) => {
     console.log(images);
 
     // 첫 번째 이미지를 기본 대표 사진으로 설정
-<<<<<<< HEAD
-    if (!featuredImage && newImages.length > 0) {
-      setFeaturedImage(newImages[0]);
-=======
+
     if (!featuredImage && imagePaths.length > 0) {
       setFeaturedImage(imagePaths[0]);
->>>>>>> d2a0ff0 (commit)
     }
   };
 
@@ -82,27 +62,6 @@ const ReviewModal = ({ closeModal, addReview }) => {
     console.log(images);
 
     if (title && grade && googleId) {
-<<<<<<< HEAD
-      const newReview = {
-        title,
-        grade,
-        date,
-        description,
-        images, // 이미지 배열을 전송
-        featuredImage,
-        userId: googleId, // 구글 ID를 userId로 전송
-      };
-
-      console.log('Sending Data:', newReview);
-
-      try {
-        const response = await fetch('http://localhost:8000/post_tasks', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newReview),
-=======
       const formData = new FormData();
       console.log(title, grade, googleId);
       formData.append("title", title);
@@ -123,17 +82,12 @@ const ReviewModal = ({ closeModal, addReview }) => {
         const response = await fetch("http://localhost:8000/post_tasks", {
           method: "POST",
           body: formData,
->>>>>>> d2a0ff0 (commit)
         });
 
         // console.log(formData);
 
         const result = await response.json();
         if (response.ok) {
-<<<<<<< HEAD
-          console.log('Review successfully submitted:', result);
-          addReview(newReview);
-=======
           console.log("Review successfully submitted:", result);
           addReview({
             title,
@@ -144,16 +98,16 @@ const ReviewModal = ({ closeModal, addReview }) => {
             featuredImage,
             userId: googleId,
           });
->>>>>>> d2a0ff0 (commit)
+
           closeModal();
         } else {
-          console.error('Failed to submit review:', result.error);
+          console.error("Failed to submit review:", result.error);
         }
       } catch (error) {
-        console.error('Error while submitting review:', error);
+        console.error("Error while submitting review:", error);
       }
     } else {
-      alert('제목과 별점, 구글 ID는 필수 항목입니다.');
+      alert("제목과 별점, 구글 ID는 필수 항목입니다.");
     }
   };
 
@@ -184,8 +138,8 @@ const ReviewModal = ({ closeModal, addReview }) => {
                   key={star}
                   onClick={() => setGrade(star)}
                   style={{
-                    cursor: 'pointer',
-                    color: star <= grade ? 'gold' : 'gray',
+                    cursor: "pointer",
+                    color: star <= grade ? "gold" : "gray",
                   }}
                   className="text-2xl"
                 >
@@ -261,17 +215,10 @@ const ReviewModal = ({ closeModal, addReview }) => {
                   type="button"
                   onClick={() => handleFeaturedImageChange(image)}
                   className={`absolute bottom-0 left-0 ${
-<<<<<<< HEAD
-                    image === featuredImage ? 'bg-cyan-500' : 'bg-cyan-200'
-                  } text-black p-1 rounded-full`}
-                >
-                  {image === featuredImage ? '대표 사진' : '대표로 설정'}
-=======
                     image === featuredImage ? "bg-cyan-500" : "bg-cyan-200"
                   } text-black p-1 rounded-full`}
                 >
                   {image === featuredImage ? "대표 사진" : "대표로 설정"}
->>>>>>> d2a0ff0 (commit)
                 </button>
               </div>
             ))}
