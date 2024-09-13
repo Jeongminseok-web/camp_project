@@ -6,15 +6,13 @@ import { fetchGetTasksData } from "../../redux/slices/apiSlice";
 import { toast } from "react-toastify";
 
 const ReviewPanel = () => {
-  const tasks = useSelector((state) => state.api.getTasksData || []);
-  // console.log("UserId:", userId);
-  // console.log("Action payload:", action.payload);
+  const tasks = useSelector((state) => state.api.getTasksData);
   console.log(tasks);
   const authData = useSelector((state) => state.auth.authData);
   // console.log(authData);
   const dispatch = useDispatch();
   const userKey = useSelector((state) => authData?.sub);
-  // console.log(userKey);
+  console.log(userKey);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reviews, setReviews] = useState([]); // 리뷰 목록을 관리
   const [localTasks, setLocalTasks] = useState([]);
@@ -38,16 +36,22 @@ const ReviewPanel = () => {
 
   useEffect(() => {
     dispatch(fetchGetTasksData()).then((result) => {
-      setLocalTasks(result.payload); // 이미 서버에서 정렬된 데이터를 받음
+      setLocalTasks(result.payload);
     });
-    // 컴포넌트가 마운트될 때 캠핑장 데이터를 가져옵니다.
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   dispatch(fetchGetTasksData()).then((result) => {
+  //     setLocalTasks(result.payload); // 이미 서버에서 정렬된 데이터를 받음
+  //   });
+  //   // 컴포넌트가 마운트될 때 캠핑장 데이터를 가져옵니다.
+  // }, [dispatch]);
 
   // 현재 페이지에 해당하는 데이터 계산
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = tasks.slice(indexOfFirstItem, indexOfLastItem);
-  console.log(currentItems);
+  // console.log(currentItems);
 
   // 페이지 번호 배열 생성
   const totalPages = Math.ceil(tasks.length / itemsPerPage);
@@ -75,7 +79,12 @@ const ReviewPanel = () => {
     <div className="w-full h-full">
       <div className="w-full h-full pt-10 flex flex-wrap gap-x-4">
         {currentItems.map((task) => (
-          <ReviewItem key={task.id} reviews={reviews} task={task} />
+          <ReviewItem
+            key={task._id} // Assuming _id is the unique identifier
+            reviews={reviews}
+            task={task}
+            imageUrl={`http://localhost:8000/uploads/${task.image}`}
+          />
         ))}
       </div>
       <div>

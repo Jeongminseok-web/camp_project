@@ -5,38 +5,31 @@ import { IoMdCloseCircle } from "react-icons/io"; // 닫기 아이콘
 const ReviewModal = ({ closeModal, addReview }) => {
   const [title, setTitle] = useState("");
   const [grade, setGrade] = useState(0);
-
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [featuredImage, setFeaturedImage] = useState(null);
-  const [realimage, setRealImage] = useState("");
 
   const googleId = useSelector((state) => state.auth.authData?.sub);
+  const userName = useSelector((state) => state.auth.authData?.name);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
 
-    console.log(files);
-    const imagefile = event.target.files;
-    const imagePaths = files.map((file) => file);
-    console.log(imagePaths);
-    setRealImage(imagefile);
     if (files.length + images.length > 5) {
       alert("최대 5장까지 업로드할 수 있습니다.");
-
       return;
     }
 
     // const newImages = files.map((file) => URL.createObjectURL(file));
-    setImages((prevImages) => [...prevImages, ...imagePaths]);
+    setImages((prevImages) => [...prevImages, ...files]);
 
     console.log(images);
 
     // 첫 번째 이미지를 기본 대표 사진으로 설정
 
-    if (!featuredImage && imagePaths.length > 0) {
-      setFeaturedImage(imagePaths[0]);
+    if (!featuredImage && files.length > 0) {
+      setFeaturedImage(files[0]);
     }
   };
 
@@ -69,16 +62,14 @@ const ReviewModal = ({ closeModal, addReview }) => {
       formData.append("date", date);
       formData.append("description", description);
       formData.append("userId", googleId);
-      formData.append("featuredImage", featuredImage);
-      formData.append("images", realimage);
-      // images.forEach((file) => {
-      //   formData.append("images", file);
-      // });
-      // console.log(formData);
+      formData.append("userName", userName);
+
+      // Add images to FormData
+      images.forEach((file) => {
+        formData.append("images", file);
+      });
+
       try {
-        for (let key of formData.keys()) {
-          console.log(key, ":", formData.get(key));
-        }
         const response = await fetch("http://localhost:8000/post_tasks", {
           method: "POST",
           body: formData,
@@ -119,6 +110,7 @@ const ReviewModal = ({ closeModal, addReview }) => {
           onSubmit={handleSubmit}
           encType="multipart/form-data"
           method="post"
+          action="/uploads"
         >
           <label className="block mb-2">
             방문한 캠핑장 이름 (필수):
