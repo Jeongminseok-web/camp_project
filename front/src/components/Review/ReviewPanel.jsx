@@ -7,12 +7,12 @@ import { toast } from "react-toastify";
 
 const ReviewPanel = () => {
   const tasks = useSelector((state) => state.api.getTasksData);
-  console.log(tasks);
+  // console.log(tasks);
   const authData = useSelector((state) => state.auth.authData);
   // console.log(authData);
   const dispatch = useDispatch();
   const userKey = useSelector((state) => authData?.sub);
-  console.log(userKey);
+  // console.log(userKey);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reviews, setReviews] = useState([]); // 리뷰 목록을 관리
   const [localTasks, setLocalTasks] = useState([]);
@@ -84,6 +84,7 @@ const ReviewPanel = () => {
             reviews={reviews}
             task={task}
             imageUrl={`http://localhost:8000/uploads/${task.image}`}
+            closeModal={closeModal}
           />
         ))}
       </div>
